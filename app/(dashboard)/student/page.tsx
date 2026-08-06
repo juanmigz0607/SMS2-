@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Search, UserPlus, GraduationCap, Mail, Phone, MapPin } from "lucide-react"
+import { Search, UserPlus, GraduationCap, Mail, Phone, MapPin, FileCheck } from "lucide-react"
 
 import { createClient } from "@/utils/supabase/client"
 import { PageHeader } from "@/components/page-header"
@@ -148,11 +148,11 @@ export default function StudentDirectoryPage() {
                 description="View, filter, and manage registered student accounts and active academic profiles."
             >
                 <Link
-                    href="/enrollment"
+                    href="/pre-register"
                     className={cn(buttonVariants({ variant: "default", size: "sm" }), "gap-2")}
                 >
-                    <UserPlus className="size-4" />
-                    Enroll New Student
+                    <FileCheck className="size-4" />
+                    Pre-Registered Applications
                 </Link>
             </PageHeader>
 

@@ -1,14 +1,11 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { createClient } from "@/utils/supabase/server";
 
 export async function enrollStudentAction(formData: FormData) {
+    const supabase = await createClient();
+
     // Extract Form Values
-    const studentNumber = formData.get("studentNumber") as string;
     const firstName = formData.get("firstName") as string;
     const middleName = formData.get("middleName") as string;
     const lastName = formData.get("lastName") as string;
@@ -22,8 +19,8 @@ export async function enrollStudentAction(formData: FormData) {
     const academicYearId = formData.get("academicYearId") as string;
     const semesterId = formData.get("semesterId") as string;
 
+    // Validation (without studentNumber since it's auto-generated)
     if (
-        !studentNumber ||
         !firstName ||
         !lastName ||
         !email ||
@@ -35,18 +32,21 @@ export async function enrollStudentAction(formData: FormData) {
         return { success: false, error: "Please fill in all required fields." };
     }
 
+    // Auto-generate student number (e.g., 2026-84920)
+    const generatedStudentNumber = `2026-${Math.floor(10000 + Math.random() * 90000)}`;
+
     try {
         // 1. Insert Profile into `students`
         const { data: student, error: studentError } = await supabase
             .from("students")
             .insert({
-                student_number: studentNumber,
+                student_number: generatedStudentNumber,
                 first_name: firstName,
                 middle_name: middleName || null,
                 last_name: lastName,
                 email: email,
-                contact_number: contactNumber,
-                address: address,
+                contact_number: contactNumber || null,
+                address: address || null,
             })
             .select("id")
             .single();
@@ -55,13 +55,13 @@ export async function enrollStudentAction(formData: FormData) {
             if (studentError.code === "23505") {
                 return {
                     success: false,
-                    error: "Student Number or Email address already exists.",
+                    error: "Email address is already registered.",
                 };
             }
             return { success: false, error: studentError.message };
         }
 
-        // 2. Insert Enrollment Record with Foreign Keys
+        // 2. Insert Enrollment Record with Foreign Keys (Default status: Pending)
         const { error: enrollmentError } = await supabase
             .from("enrollments")
             .insert({
@@ -70,7 +70,7 @@ export async function enrollStudentAction(formData: FormData) {
                 year_level_id: yearLevelId,
                 academic_year_id: academicYearId,
                 semester_id: semesterId,
-                status: "Enrolled",
+                status: "Pending",
             });
 
         if (enrollmentError) {
@@ -81,7 +81,7 @@ export async function enrollStudentAction(formData: FormData) {
     } catch (err) {
         return {
             success: false,
-            error: "An unexpected error occurred during enrollment.",
+            error: "An unexpected error occurred during submission.",
         };
     }
 }

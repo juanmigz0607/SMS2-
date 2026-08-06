@@ -137,7 +137,7 @@ export default function LoginPage() {
 
               {/* Apply Now Section */}
               <div className="text-center text-xs text-slate-600">
-                Don't have an account yet?{" "}
+                {" "}
                 <Link
                   href="/enrollment"
                   className="font-semibold text-blue-600 hover:underline"

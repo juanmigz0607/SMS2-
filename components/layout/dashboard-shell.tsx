@@ -55,6 +55,7 @@ export function DashboardShell({
 
     // Derive page title based on active path
     const getPageTitle = (path: string) => {
+        if (path.includes("/pre-register")) return "Pre-Registered Applications"
         if (path.includes("/enrollment")) return "Student Enrollment"
         if (path.includes("/student")) return "Student Directory"
         return "Enrollment Dashboard"

@@ -38,7 +38,7 @@ export const adminNavigation: NavGroup[] = [
   {
     label: "Enrollment Management",
     items: [
-      { title: "Enroll Student", href: "/enrollment", icon: UserPlus, roles: ["admin", "registrar"] },
+      { title: "Pre Register", href: "/pre-register", icon: FileCheck, roles: ["admin", "registrar"] },
       { title: "Student Directory", href: "/student", icon: Users, roles: ["admin", "staff", "registrar"] },
     ],
   },
@@ -62,7 +62,7 @@ export const staffNavigation: NavGroup[] = [
   {
     label: "Enrollment Management",
     items: [
-      { title: "Enroll Student", href: "/enrollment", icon: UserPlus },
+      { title: "Pre Register", href: "/pre-register", icon: FileCheck },
       { title: "Student Directory", href: "/student", icon: Users },
     ],
   },

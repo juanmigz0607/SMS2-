@@ -9,6 +9,7 @@ import {
     GraduationCap,
     Clock,
     UserPlus,
+    FileCheck,
     ArrowRight,
     CheckCircle2,
 } from "lucide-react"
@@ -196,11 +197,11 @@ export default function EnrollmentDashboardPage() {
                 description="Overview of student registrations, active enrollments, and academic distribution."
             >
                 <Link
-                    href="/enrollment"
+                    href="/pre-register"
                     className={cn(buttonVariants({ variant: "default", size: "sm" }), "gap-2")}
                 >
-                    <UserPlus className="size-4" />
-                    Enroll New Student
+                    <FileCheck className="size-4" />
+                    Pre-Registered Applications
                 </Link>
             </PageHeader>
 
@@ -273,18 +274,18 @@ export default function EnrollmentDashboardPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <Link
-                            href="/enrollment"
+                            href="/pre-register"
                             className="flex items-center justify-between rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
                         >
                             <div className="space-y-1">
                                 <p className="text-sm font-medium text-slate-900">
-                                    New Student Registration
+                                    Pre-Registered Applications
                                 </p>
                                 <p className="text-xs text-muted-foreground">
-                                    Register student details and assign academic program.
+                                    Review and manage online student enrollment submissions.
                                 </p>
                             </div>
-                            <ArrowRight className="size-4 text-slate-400" />
+                            <span className="text-xs font-semibold text-blue-600">View Applications &rarr;</span>
                         </Link>
 
                         <Link

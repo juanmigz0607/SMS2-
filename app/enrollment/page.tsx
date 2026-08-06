@@ -78,7 +78,7 @@ export default function PublicEnrollmentPage() {
             setIsSuccess(true);
             formRef.current?.reset();
         } else {
-            setErrorMessage(result.error || "Failed to enroll student.");
+            setErrorMessage(result.error || "Failed to submit application.");
         }
     }
 
@@ -134,114 +134,7 @@ export default function PublicEnrollmentPage() {
                                     </div>
                                 )}
 
-                                {/* Section 1: Academic Details */}
-                                <div className="space-y-3">
-                                    <h3 className="text-sm font-bold text-slate-700">
-                                        Academic Information
-                                    </h3>
-                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="studentNumber" className="text-xs font-semibold">
-                                                Student Number / LRN *
-                                            </Label>
-                                            <Input
-                                                id="studentNumber"
-                                                name="studentNumber"
-                                                placeholder="e.g., 2026-00001"
-                                                required
-                                                disabled={isLoading}
-                                            />
-                                        </div>
-
-                                        {/* Course / Program Dropdown */}
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="programId" className="text-xs font-semibold">
-                                                Preferred Course / Program *
-                                            </Label>
-                                            <select
-                                                id="programId"
-                                                name="programId"
-                                                required
-                                                disabled={isLoading || isFetchingOptions}
-                                                className={inputStyles}
-                                            >
-                                                <option value="">Select Program</option>
-                                                {programs.map((p) => (
-                                                    <option key={p.id} value={p.id}>
-                                                        {p.code} - {p.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        {/* Year Level Dropdown */}
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="yearLevelId" className="text-xs font-semibold">
-                                                Year Level *
-                                            </Label>
-                                            <select
-                                                id="yearLevelId"
-                                                name="yearLevelId"
-                                                required
-                                                disabled={isLoading || isFetchingOptions}
-                                                className={inputStyles}
-                                            >
-                                                <option value="">Select Year Level</option>
-                                                {yearLevels.map((y) => (
-                                                    <option key={y.id} value={y.id}>
-                                                        {y.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        {/* Academic Year Dropdown */}
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="academicYearId" className="text-xs font-semibold">
-                                                Academic Year *
-                                            </Label>
-                                            <select
-                                                id="academicYearId"
-                                                name="academicYearId"
-                                                required
-                                                disabled={isLoading || isFetchingOptions}
-                                                className={inputStyles}
-                                            >
-                                                <option value="">Select Academic Year</option>
-                                                {academicYears.map((a) => (
-                                                    <option key={a.id} value={a.id}>
-                                                        {a.year_code}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        {/* Semester Dropdown */}
-                                        <div className="grid gap-2 sm:col-span-2">
-                                            <Label htmlFor="semesterId" className="text-xs font-semibold">
-                                                Semester *
-                                            </Label>
-                                            <select
-                                                id="semesterId"
-                                                name="semesterId"
-                                                required
-                                                disabled={isLoading || isFetchingOptions}
-                                                className={inputStyles}
-                                            >
-                                                <option value="">Select Semester</option>
-                                                {semesters.map((s) => (
-                                                    <option key={s.id} value={s.id}>
-                                                        {s.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <hr className="border-slate-100" />
-
-                                {/* Section 2: Personal Information */}
+                                {/* Section 1: Personal Information */}
                                 <div className="space-y-3">
                                     <h3 className="text-sm font-bold text-slate-700">
                                         Personal Details
@@ -324,6 +217,100 @@ export default function PublicEnrollmentPage() {
                                             placeholder="Complete address"
                                             disabled={isLoading}
                                         />
+                                    </div>
+                                </div>
+
+                                <hr className="border-slate-100" />
+
+                                {/* Section 2: Academic Details */}
+                                <div className="space-y-3">
+                                    <h3 className="text-sm font-bold text-slate-700">
+                                        Academic Information
+                                    </h3>
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        {/* Course / Program Dropdown */}
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="programId" className="text-xs font-semibold">
+                                                Preferred Course / Program *
+                                            </Label>
+                                            <select
+                                                id="programId"
+                                                name="programId"
+                                                required
+                                                disabled={isLoading || isFetchingOptions}
+                                                className={inputStyles}
+                                            >
+                                                <option value="">Select Program</option>
+                                                {programs.map((p) => (
+                                                    <option key={p.id} value={p.id}>
+                                                        {p.code} - {p.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Year Level Dropdown */}
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="yearLevelId" className="text-xs font-semibold">
+                                                Year Level *
+                                            </Label>
+                                            <select
+                                                id="yearLevelId"
+                                                name="yearLevelId"
+                                                required
+                                                disabled={isLoading || isFetchingOptions}
+                                                className={inputStyles}
+                                            >
+                                                <option value="">Select Year Level</option>
+                                                {yearLevels.map((y) => (
+                                                    <option key={y.id} value={y.id}>
+                                                        {y.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Academic Year Dropdown */}
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="academicYearId" className="text-xs font-semibold">
+                                                Academic Year *
+                                            </Label>
+                                            <select
+                                                id="academicYearId"
+                                                name="academicYearId"
+                                                required
+                                                disabled={isLoading || isFetchingOptions}
+                                                className={inputStyles}
+                                            >
+                                                <option value="">Select Academic Year</option>
+                                                {academicYears.map((a) => (
+                                                    <option key={a.id} value={a.id}>
+                                                        {a.year_code}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Semester Dropdown */}
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="semesterId" className="text-xs font-semibold">
+                                                Semester *
+                                            </Label>
+                                            <select
+                                                id="semesterId"
+                                                name="semesterId"
+                                                required
+                                                disabled={isLoading || isFetchingOptions}
+                                                className={inputStyles}
+                                            >
+                                                <option value="">Select Semester</option>
+                                                {semesters.map((s) => (
+                                                    <option key={s.id} value={s.id}>
+                                                        {s.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 
