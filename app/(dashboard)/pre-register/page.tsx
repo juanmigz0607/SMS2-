@@ -13,6 +13,11 @@ import {
     Phone,
     Loader2,
     Filter,
+    MapPin,
+    GraduationCap,
+    Calendar,
+    User,
+    X,
 } from "lucide-react"
 
 import { createClient } from "@/utils/supabase/client"
@@ -37,10 +42,14 @@ type PreRegistrationRow = {
     student_id: string
     student_number: string
     full_name: string
+    first_name: string
+    middle_name: string
+    last_name: string
     email: string
     contact_number: string
     address: string
     program: string
+    program_name: string
     year_level: string
     academic_year: string
     semester: string
@@ -59,14 +68,18 @@ export default function PreRegisterPage() {
     const [isLoading, setIsLoading] = React.useState(true)
     const [updatingId, setUpdatingId] = React.useState<string | null>(null)
 
-    const fetchApplications = React.useCallback(async () => {
-        setIsLoading(true)
+    // Modal state for row click details
+    const [selectedApplicant, setSelectedApplicant] = React.useState<PreRegistrationRow | null>(null)
+
+    const fetchApplications = React.useCallback(async (showLoader = false) => {
+        if (showLoader) setIsLoading(true)
         try {
             const { data, error } = await supabase
                 .from("enrollments")
                 .select(`
                     id,
                     student_id,
+                    applicant_id,
                     status,
                     enrolled_at,
                     students (
@@ -79,11 +92,22 @@ export default function PreRegisterPage() {
                         contact_number,
                         address
                     ),
+                    applicants (
+                        id,
+                        applicant_id,
+                        first_name,
+                        middle_name,
+                        last_name,
+                        email,
+                        contact_number,
+                        address
+                    ),
                     programs ( code, name ),
                     year_levels ( name ),
                     academic_years ( year_code ),
                     semesters ( name )
                 `)
+                .eq("status", "Pending")
                 .order("enrolled_at", { ascending: false })
 
             if (error) {
@@ -93,19 +117,37 @@ export default function PreRegisterPage() {
 
             if (data) {
                 const formatted: PreRegistrationRow[] = data.map((e: any) => {
-                    const s = e.students
-                    const middleInitial = s?.middle_name ? ` ${s.middle_name.charAt(0)}.` : ""
-                    const fullName = s ? `${s.first_name}${middleInitial} ${s.last_name}` : "Unknown Student"
+                    const person = e.students || e.applicants
+                    const middleInitial = person?.middle_name ? ` ${person.middle_name.charAt(0)}.` : ""
+                    const fullName = person ? `${person.first_name}${middleInitial} ${person.last_name}` : "Unknown Applicant"
+                    const status = e.status || "Pending"
+                    const rawStudentNumber = e.students?.student_number
+                    let displayStudentNumber = "N/A"
+
+                    if (status === "Enrolled") {
+                        displayStudentNumber =
+                            rawStudentNumber && !rawStudentNumber.startsWith("PENDING")
+                                ? rawStudentNumber
+                                : "N/A"
+                    } else if (status === "Pending") {
+                        displayStudentNumber = e.applicants?.applicant_id || "Pending Approval"
+                    } else {
+                        displayStudentNumber = "N/A"
+                    }
 
                     return {
                         id: e.id,
-                        student_id: e.student_id,
-                        student_number: s?.student_number || "N/A",
+                        student_id: e.student_id || e.applicant_id,
+                        student_number: displayStudentNumber,
                         full_name: fullName,
-                        email: s?.email || "N/A",
-                        contact_number: s?.contact_number || "N/A",
-                        address: s?.address || "N/A",
+                        first_name: person?.first_name || "N/A",
+                        middle_name: person?.middle_name || "",
+                        last_name: person?.last_name || "N/A",
+                        email: person?.email || "N/A",
+                        contact_number: person?.contact_number || "N/A",
+                        address: person?.address || "N/A",
                         program: e.programs?.code || "Unassigned",
+                        program_name: e.programs?.name || "Unassigned Program",
                         year_level: e.year_levels?.name || "N/A",
                         academic_year: e.academic_years?.year_code || "N/A",
                         semester: e.semesters?.name || "N/A",
@@ -133,17 +175,24 @@ export default function PreRegisterPage() {
     }, [supabase])
 
     React.useEffect(() => {
-        fetchApplications()
+        fetchApplications(true)
 
-        // Realtime subscription for pre-registrations updates
         const channel = supabase
-            .channel("pre-register-realtime")
+            .channel("pre-register-live-updates")
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "applicants" },
+                () => fetchApplications(false)
+            )
             .on(
                 "postgres_changes",
                 { event: "*", schema: "public", table: "enrollments" },
-                () => {
-                    fetchApplications()
-                }
+                () => fetchApplications(false)
+            )
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "students" },
+                () => fetchApplications(false)
             )
             .subscribe()
 
@@ -154,8 +203,10 @@ export default function PreRegisterPage() {
 
     async function handleStatusChange(
         id: string,
-        newStatus: "Enrolled" | "Pending" | "Rejected"
+        newStatus: "Enrolled" | "Pending" | "Rejected",
+        e?: React.MouseEvent
     ) {
+        if (e) e.stopPropagation() // Prevent triggering modal open on button click
         setUpdatingId(id)
         const result = await updateEnrollmentStatusAction(id, newStatus)
         setUpdatingId(null)
@@ -164,12 +215,15 @@ export default function PreRegisterPage() {
             setApplications((prev) =>
                 prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app))
             )
+            if (selectedApplicant?.id === id) {
+                setSelectedApplicant((prev) => (prev ? { ...prev, status: newStatus } : null))
+            }
+            fetchApplications(false)
         } else {
             alert(result.error || "Failed to update status")
         }
     }
 
-    // Program options for dropdown filter
     const availablePrograms = React.useMemo(() => {
         const set = new Set(
             applications.map((app) => app.program).filter((p) => p !== "Unassigned")
@@ -177,7 +231,6 @@ export default function PreRegisterPage() {
         return Array.from(set)
     }, [applications])
 
-    // Filter logic
     const filteredApplications = React.useMemo(() => {
         return applications.filter((app) => {
             const matchesSearch =
@@ -196,7 +249,6 @@ export default function PreRegisterPage() {
         })
     }, [applications, searchQuery, selectedStatus, selectedProgram])
 
-    // Stat counts
     const stats = React.useMemo(() => {
         const total = applications.length
         const pending = applications.filter(
@@ -287,11 +339,10 @@ export default function PreRegisterPage() {
             <Card className="border-slate-200 bg-white shadow-sm">
                 <CardContent className="p-4">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        {/* Search Input */}
                         <div className="relative flex-1 max-w-md">
                             <Search className="absolute left-3 top-2.5 size-4 text-slate-400" />
                             <Input
-                                placeholder="Search by student no, name, or email..."
+                                placeholder="Search by ID, name, or email..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="pl-9 text-xs h-9"
@@ -299,7 +350,6 @@ export default function PreRegisterPage() {
                         </div>
 
                         <div className="flex items-center gap-3">
-                            {/* Status Filter */}
                             <div className="flex items-center gap-1.5">
                                 <Filter className="size-3.5 text-slate-400" />
                                 <span className="text-xs font-semibold text-slate-500 shrink-0">
@@ -317,7 +367,6 @@ export default function PreRegisterPage() {
                                 </select>
                             </div>
 
-                            {/* Program Filter */}
                             <div className="flex items-center gap-1.5">
                                 <span className="text-xs font-semibold text-slate-500 shrink-0">
                                     Program:
@@ -360,8 +409,8 @@ export default function PreRegisterPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="bg-slate-50/50">
-                                    <TableHead className="text-xs font-semibold">Student No.</TableHead>
-                                    <TableHead className="text-xs font-semibold">Student Name</TableHead>
+                                    <TableHead className="text-xs font-semibold">ID / Student No.</TableHead>
+                                    <TableHead className="text-xs font-semibold">Applicant Name</TableHead>
                                     <TableHead className="text-xs font-semibold">Contact Details</TableHead>
                                     <TableHead className="text-xs font-semibold">Program</TableHead>
                                     <TableHead className="text-xs font-semibold">Year & Term</TableHead>
@@ -377,7 +426,8 @@ export default function PreRegisterPage() {
                                     return (
                                         <TableRow
                                             key={app.id}
-                                            className="hover:bg-slate-50/80 transition-colors"
+                                            onClick={() => setSelectedApplicant(app)}
+                                            className="hover:bg-slate-50/80 cursor-pointer transition-colors"
                                         >
                                             <TableCell className="font-mono text-xs font-bold text-slate-900">
                                                 {app.student_number}
@@ -449,47 +499,34 @@ export default function PreRegisterPage() {
                                                 <div className="flex items-center justify-end gap-1.5">
                                                     {isUpdating ? (
                                                         <Loader2 className="size-4 animate-spin text-slate-400" />
-                                                    ) : (
+                                                    ) : app.status === "Pending" ? (
                                                         <>
-                                                            {app.status !== "Enrolled" && (
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="default"
-                                                                    className="h-7 px-2.5 text-[11px] bg-emerald-600 hover:bg-emerald-700 text-white"
-                                                                    onClick={() =>
-                                                                        handleStatusChange(app.id, "Enrolled")
-                                                                    }
-                                                                >
-                                                                    Approve
-                                                                </Button>
-                                                            )}
+                                                            <Button
+                                                                size="sm"
+                                                                variant="default"
+                                                                className="h-7 px-2.5 text-[11px] bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+                                                                onClick={(e) =>
+                                                                    handleStatusChange(app.id, "Enrolled", e)
+                                                                }
+                                                            >
+                                                                Approve
+                                                            </Button>
 
-                                                            {app.status !== "Rejected" && (
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="h-7 px-2.5 text-[11px] text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
-                                                                    onClick={() =>
-                                                                        handleStatusChange(app.id, "Rejected")
-                                                                    }
-                                                                >
-                                                                    Reject
-                                                                </Button>
-                                                            )}
-
-                                                            {app.status !== "Pending" && (
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="ghost"
-                                                                    className="h-7 px-2 text-[11px] text-slate-500 hover:bg-slate-100"
-                                                                    onClick={() =>
-                                                                        handleStatusChange(app.id, "Pending")
-                                                                    }
-                                                                >
-                                                                    Mark Pending
-                                                                </Button>
-                                                            )}
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline"
+                                                                className="h-7 px-2.5 text-[11px] text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 cursor-pointer"
+                                                                onClick={(e) =>
+                                                                    handleStatusChange(app.id, "Rejected", e)
+                                                                }
+                                                            >
+                                                                Reject
+                                                            </Button>
                                                         </>
+                                                    ) : (
+                                                        <span className="text-[11px] font-medium text-slate-400 italic">
+                                                            No Actions (Final)
+                                                        </span>
                                                     )}
                                                 </div>
                                             </TableCell>
@@ -501,6 +538,167 @@ export default function PreRegisterPage() {
                     )}
                 </CardContent>
             </Card>
+
+            {/* Applicant Profile Popup Modal */}
+            {selectedApplicant && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs"
+                    onClick={() => setSelectedApplicant(null)}
+                >
+                    <div
+                        className="w-full max-w-lg rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-6 py-4">
+                            <div className="flex items-center gap-2">
+                                <User className="size-5 text-slate-600" />
+                                <h3 className="text-base font-bold text-slate-800">
+                                    Applicant Information
+                                </h3>
+                            </div>
+                            <button
+                                onClick={() => setSelectedApplicant(null)}
+                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700 transition-colors cursor-pointer"
+                            >
+                                <X className="size-5" />
+                            </button>
+                        </div>
+
+                        {/* Modal Body */}
+                        <div className="space-y-6 p-6 text-xs text-slate-700">
+                            {/* Profile Details */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">
+                                        Personal Information
+                                    </span>
+                                    <StatusBadge
+                                        status={
+                                            selectedApplicant.status.toLowerCase() === "enrolled"
+                                                ? "success"
+                                                : selectedApplicant.status.toLowerCase() === "pending"
+                                                    ? "warning"
+                                                    : "danger"
+                                        }
+                                    >
+                                        {selectedApplicant.status}
+                                    </StatusBadge>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 rounded-lg bg-slate-50 p-4 border border-slate-100">
+                                    <div>
+                                        <p className="text-[10px] text-slate-400 uppercase font-medium">
+                                            Full Name
+                                        </p>
+                                        <p className="font-bold text-slate-900 text-sm mt-0.5">
+                                            {selectedApplicant.full_name}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-slate-400 uppercase font-medium">
+                                            ID / Student No.
+                                        </p>
+                                        <p className="font-mono font-bold text-slate-900 text-sm mt-0.5">
+                                            {selectedApplicant.student_number}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2 pt-1">
+                                    <div className="flex items-center gap-2 text-slate-600">
+                                        <Mail className="size-4 text-slate-400 shrink-0" />
+                                        <span>{selectedApplicant.email}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-slate-600">
+                                        <Phone className="size-4 text-slate-400 shrink-0" />
+                                        <span>{selectedApplicant.contact_number}</span>
+                                    </div>
+                                    <div className="flex items-start gap-2 text-slate-600">
+                                        <MapPin className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                        <span>{selectedApplicant.address}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr className="border-slate-100" />
+
+                            {/* Academic Details */}
+                            <div className="space-y-3">
+                                <span className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">
+                                    Academic Application Details
+                                </span>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="flex items-start gap-2">
+                                        <GraduationCap className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                        <div>
+                                            <p className="text-[10px] text-slate-400">Course / Program</p>
+                                            <p className="font-semibold text-slate-800">
+                                                {selectedApplicant.program} - {selectedApplicant.program_name}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start gap-2">
+                                        <Calendar className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                        <div>
+                                            <p className="text-[10px] text-slate-400">Year & Term</p>
+                                            <p className="font-semibold text-slate-800">
+                                                {selectedApplicant.year_level} ({selectedApplicant.semester})
+                                            </p>
+                                            <p className="text-[10px] text-slate-500">
+                                                Academic Year {selectedApplicant.academic_year}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Modal Footer / Actions */}
+                        <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-3">
+                            <span className="text-[10px] text-slate-400">
+                                Submitted on {selectedApplicant.enrolled_at}
+                            </span>
+                            <div className="flex items-center gap-2">
+                                {selectedApplicant.status === "Pending" ? (
+                                    <>
+                                        <Button
+                                            size="sm"
+                                            className="h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+                                            onClick={(e) =>
+                                                handleStatusChange(selectedApplicant.id, "Enrolled", e)
+                                            }
+                                        >
+                                            Approve Application
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="h-8 px-3 text-xs text-red-600 border-red-200 hover:bg-red-50 cursor-pointer"
+                                            onClick={(e) =>
+                                                handleStatusChange(selectedApplicant.id, "Rejected", e)
+                                            }
+                                        >
+                                            Reject
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Button
+                                        size="sm"
+                                        variant="secondary"
+                                        className="h-8 px-3 text-xs cursor-pointer"
+                                        onClick={() => setSelectedApplicant(null)}
+                                    >
+                                        Close
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

@@ -1,12 +1,7 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
-
-// Initialize Supabase Client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function loginAction(formData: FormData) {
     const email = formData.get("email") as string;
@@ -15,6 +10,8 @@ export async function loginAction(formData: FormData) {
     if (!email || !password) {
         return { success: false, error: "Email and password are required." };
     }
+
+    const supabase = createAdminClient();
 
     try {
         const { data: user, error } = await supabase
@@ -54,4 +51,4 @@ export async function logoutAction() {
     const cookieStore = await cookies();
     cookieStore.delete("user_session");
     return { success: true };
-}
+}

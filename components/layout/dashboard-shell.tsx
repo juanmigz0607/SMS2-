@@ -22,6 +22,8 @@ import {
 import { createClient } from "@/utils/supabase/client"
 import { logoutAction } from "@/app/login/action"
 
+import { LiveDateTime } from "@/components/live-date-time"
+
 export type UserRole = "admin" | "staff" | "registrar"
 
 type DashboardShellProps = {
@@ -41,6 +43,11 @@ export function DashboardShell({
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
     const [loggingOut, setLoggingOut] = useState(false)
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     // Force reload on back navigation if page was cached (bfcache)
     useEffect(() => {
@@ -57,7 +64,11 @@ export function DashboardShell({
     const getPageTitle = (path: string) => {
         if (path.includes("/pre-register")) return "Pre-Registered Applications"
         if (path.includes("/enrollment")) return "Student Enrollment"
-        if (path.includes("/student")) return "Student Directory"
+        if (path.includes("/applicant")) return "Applicant Directory"
+        if (path.includes("/student-info")) return "Student Info Database"
+        if (path.includes("/rfid-generate")) return "Student RFID Generate"
+        if (path.includes("/file-storage")) return "Digital File Storage"
+        if (path.includes("/heath-record")) return "Health Record Management"
         return "Enrollment Dashboard"
     }
 
@@ -144,57 +155,66 @@ export function DashboardShell({
                         </div>
                     </div>
 
-                    {/* User Profile Dropdown */}
-                    <div className="flex items-center gap-2">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full hover:bg-slate-100 transition-colors focus:outline-none">
-                                <Avatar className="h-8 w-8 border border-slate-200">
-                                    <AvatarImage alt={userEmail} className="object-cover" />
-                                    <AvatarFallback className="bg-slate-900 text-white font-semibold text-xs">
-                                        {userEmail.charAt(0).toUpperCase()}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </DropdownMenuTrigger>
+                    {/* Live Date & Time Display */}
+                    <div className="flex items-center gap-3" suppressHydrationWarning>
+                        {mounted && <LiveDateTime />}
 
-                            <DropdownMenuContent className="w-60 p-2" align="end" sideOffset={8}>
-                                <DropdownMenuGroup>
-                                    <DropdownMenuLabel className="px-3 py-2">
-                                        <div className="flex flex-col space-y-1">
-                                            <p className="text-sm font-semibold text-slate-900 truncate">
-                                                {userEmail.split("@")[0]}
-                                            </p>
-                                            <p className="text-xs text-slate-500 truncate">
-                                                {userEmail}
-                                            </p>
-                                            <p className="text-[10px] font-medium text-slate-600 flex items-center gap-1 pt-1">
-                                                <span className="size-1.5 rounded-full bg-blue-600" />
-                                                {roleLabel}
-                                            </p>
-                                        </div>
-                                    </DropdownMenuLabel>
+                        {/* User Profile Dropdown */}
+                        {mounted ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full hover:bg-slate-100 transition-colors focus:outline-none" suppressHydrationWarning>
+                                    <Avatar className="h-8 w-8 border border-slate-200">
+                                        <AvatarImage alt={userEmail} className="object-cover" />
+                                        <AvatarFallback className="bg-slate-900 text-white font-semibold text-xs">
+                                            {userEmail.charAt(0).toUpperCase()}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
 
-                                    <DropdownMenuSeparator className="my-1" />
+                                <DropdownMenuContent className="w-60 p-2" align="end" sideOffset={8}>
+                                    <DropdownMenuGroup>
+                                        <DropdownMenuLabel className="px-3 py-2">
+                                            <div className="flex flex-col space-y-1">
+                                                <p className="text-sm font-semibold text-slate-900 truncate">
+                                                    {userEmail.split("@")[0]}
+                                                </p>
+                                                <p className="text-xs text-slate-500 truncate">
+                                                    {userEmail}
+                                                </p>
+                                                <p className="text-[10px] font-medium text-slate-600 flex items-center gap-1 pt-1">
+                                                    <span className="size-1.5 rounded-full bg-blue-600" />
+                                                    {roleLabel}
+                                                </p>
+                                            </div>
+                                        </DropdownMenuLabel>
 
-                                    <DropdownMenuItem
-                                        className="cursor-pointer px-3 py-2 text-sm text-red-600 focus:bg-red-50 focus:text-red-600"
-                                        disabled={loggingOut}
-                                        onClick={handleLogout}
-                                    >
-                                        {loggingOut ? (
-                                            <>
-                                                <Loader2 className="mr-2 size-4 animate-spin" />
-                                                <span>Signing out...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <LogOut className="mr-2 size-4" />
-                                                <span className="font-medium">Log out</span>
-                                            </>
-                                        )}
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                        <DropdownMenuSeparator className="my-1" />
+
+                                        <DropdownMenuItem
+                                            className="cursor-pointer px-3 py-2 text-sm text-red-600 focus:bg-red-50 focus:text-red-600"
+                                            disabled={loggingOut}
+                                            onClick={handleLogout}
+                                        >
+                                            {loggingOut ? (
+                                                <>
+                                                    <Loader2 className="mr-2 size-4 animate-spin" />
+                                                    <span>Signing out...</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <LogOut className="mr-2 size-4" />
+                                                    <span className="font-medium">Log out</span>
+                                                </>
+                                            )}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        ) : (
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-white font-semibold text-xs border border-slate-200">
+                                {userEmail.charAt(0).toUpperCase()}
+                            </div>
+                        )}
                     </div>
                 </header>
 

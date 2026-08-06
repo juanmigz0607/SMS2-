@@ -1,10 +1,12 @@
 import type { LucideIcon } from "lucide-react"
 import {
-  BarChart3,
+  Activity,
   BookOpen,
-  CalendarDays,
+  CreditCard,
+  Database,
   FileCheck,
   FileText,
+  Folder,
   GraduationCap,
   LayoutDashboard,
   Settings,
@@ -39,7 +41,16 @@ export const adminNavigation: NavGroup[] = [
     label: "Enrollment Management",
     items: [
       { title: "Pre Register", href: "/pre-register", icon: FileCheck, roles: ["admin", "registrar"] },
-      { title: "Student Directory", href: "/student", icon: Users, roles: ["admin", "staff", "registrar"] },
+      { title: "Applicant Directory", href: "/applicant", icon: Users, roles: ["admin", "staff", "registrar"] },
+    ],
+  },
+  {
+    label: "REGISTRAR MANAGEMENT",
+    items: [
+      { title: "Student Info Database", href: "/student-info", icon: Database, roles: ["admin", "registrar"] },
+      { title: "Student RFID Generate", href: "/rfid-generate", icon: CreditCard, roles: ["admin", "staff", "registrar"] },
+      { title: "Digital File Storage", href: "/file-storage", icon: Folder, roles: ["admin", "staff", "registrar"] },
+      { title: "Health Record Management", href: "/heath-record", icon: Activity, roles: ["admin", "staff", "registrar"] },
     ],
   },
   {
@@ -63,7 +74,16 @@ export const staffNavigation: NavGroup[] = [
     label: "Enrollment Management",
     items: [
       { title: "Pre Register", href: "/pre-register", icon: FileCheck },
-      { title: "Student Directory", href: "/student", icon: Users },
+      { title: "Applicant Directory", href: "/applicant", icon: Users },
+    ],
+  },
+  {
+    label: "REGISTRAR MANAGEMENT",
+    items: [
+      { title: "Student Info Database", href: "/student-info", icon: Database },
+      { title: "Student RFID Generate", href: "/rfid-generate", icon: CreditCard },
+      { title: "Digital File Storage", href: "/file-storage", icon: Folder },
+      { title: "Health Record Management", href: "/heath-record", icon: Activity },
     ],
   },
 ]

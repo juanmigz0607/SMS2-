@@ -74,49 +74,59 @@ export default function EnrollmentDashboardPage() {
 
     const fetchDashboardData = React.useCallback(async () => {
         try {
-            // 1. Fetch total student count
+            // 1. Fetch total registered students count from students table
             const { count: studentCount } = await supabase
                 .from("students")
                 .select("*", { count: "exact", head: true })
 
-            // 2. Fetch enrollment stats joined with foreign tables
+            // 2. Fetch enrolled this semester count from enrollments table
+            const { count: enrolledCount } = await supabase
+                .from("enrollments")
+                .select("*", { count: "exact", head: true })
+                .eq("status", "Enrolled")
+
+            // 3. Fetch ONLY currently pending enrollments count (status = Pending)
+            const { count: pendingCount } = await supabase
+                .from("enrollments")
+                .select("*", { count: "exact", head: true })
+                .eq("status", "Pending")
+
+            // 4. Fetch total active academic programs count from programs table
+            const { count: programCount } = await supabase
+                .from("programs")
+                .select("*", { count: "exact", head: true })
+
+            setStats({
+                totalStudents: studentCount ?? 0,
+                enrolledThisSemester: enrolledCount ?? 0,
+                pendingEnrollments: pendingCount ?? 0,
+                activePrograms: programCount ?? 0,
+            })
+
+            // 5. Fetch recent 5 officially enrolled students with full details
             const { data: enrollmentsData } = await supabase
                 .from("enrollments")
                 .select(`
-                    *,
-                    students(first_name, last_name, student_number),
-                    programs(code, name),
-                    year_levels(name),
-                    semesters(name)
+                    id,
+                    status,
+                    enrolled_at,
+                    students (
+                        id,
+                        student_number,
+                        first_name,
+                        middle_name,
+                        last_name
+                    ),
+                    programs ( code, name ),
+                    year_levels ( name ),
+                    semesters ( name )
                 `)
+                .eq("status", "Enrolled")
+                .not("student_id", "is", null)
                 .order("enrolled_at", { ascending: false })
 
             if (enrollmentsData) {
-                // Enrolled status count
-                const enrolledCount = enrollmentsData.filter(
-                    (e) => e.status === "Enrolled"
-                ).length
-
-                // Pending status count
-                const pendingCount = enrollmentsData.filter(
-                    (e) => e.status === "Pending"
-                ).length
-
-                // Count unique active course programs from relational join
-                const programsSet = new Set(
-                    enrollmentsData
-                        .map((e: any) => e.programs?.code)
-                        .filter(Boolean)
-                )
-
-                setStats({
-                    totalStudents: studentCount ?? 0,
-                    enrolledThisSemester: enrolledCount,
-                    pendingEnrollments: pendingCount,
-                    activePrograms: programsSet.size,
-                })
-
-                // Map recent 5 enrollments for table
+                // Map recent enrolled students for table
                 const formattedEnrollments: EnrollmentRow[] = enrollmentsData
                     .slice(0, 5)
                     .map((e: any) => {
@@ -125,9 +135,10 @@ export default function EnrollmentDashboardPage() {
                         const yearLevel = e.year_levels
                         const semester = e.semesters
 
+                        const middleInitial = student?.middle_name ? ` ${student.middle_name.charAt(0)}.` : ""
                         const name = student
-                            ? `${student.first_name} ${student.last_name}`
-                            : "Unknown Student"
+                            ? `${student.first_name}${middleInitial} ${student.last_name}`
+                            : "Enrolled Student"
 
                         return {
                             id: e.id,
@@ -136,7 +147,7 @@ export default function EnrollmentDashboardPage() {
                             course_program: program?.code || "N/A",
                             year_level: yearLevel?.name || "N/A",
                             semester: semester?.name || "N/A",
-                            status: e.status || "Enrolled",
+                            status: "Enrolled",
                             enrolled_at: new Date(e.enrolled_at).toLocaleDateString("en-US", {
                                 month: "short",
                                 day: "numeric",
@@ -147,7 +158,7 @@ export default function EnrollmentDashboardPage() {
 
                 setRecentEnrollments(formattedEnrollments)
 
-                // Program chart aggregation using joined program code
+                // Program chart aggregation using enrolled students
                 const programCounts: Record<string, number> = {}
                 enrollmentsData.forEach((e: any) => {
                     const prog = e.programs?.code || "Unassigned"
@@ -170,12 +181,17 @@ export default function EnrollmentDashboardPage() {
     React.useEffect(() => {
         fetchDashboardData()
 
-        // Realtime channel for instant UI updates
+        // Realtime channel for instant UI updates across students, applicants, and enrollments
         const channel = supabase
             .channel("enrollment-dashboard-realtime")
             .on(
                 "postgres_changes",
                 { event: "*", schema: "public", table: "students" },
+                () => fetchDashboardData()
+            )
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "applicants" },
                 () => fetchDashboardData()
             )
             .on(
@@ -294,10 +310,10 @@ export default function EnrollmentDashboardPage() {
                         >
                             <div className="space-y-1">
                                 <p className="text-sm font-medium text-slate-900">
-                                    Student Records Directory
+                                    Applicant Directory
                                 </p>
                                 <p className="text-xs text-muted-foreground">
-                                    View and search complete student list and history.
+                                    View processed applicant records with finalized decisions (Enrolled or Rejected).
                                 </p>
                             </div>
                             <ArrowRight className="size-4 text-slate-400" />
@@ -322,7 +338,7 @@ export default function EnrollmentDashboardPage() {
                         href="/student"
                         className="text-xs font-medium text-blue-600 hover:underline"
                     >
-                        View All Students
+                        View Applicant Directory
                     </Link>
                 </CardHeader>
                 <CardContent>
