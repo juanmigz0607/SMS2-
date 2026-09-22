@@ -1,12 +1,10 @@
 import type { LucideIcon } from "lucide-react"
 import {
-  Activity,
+  BarChart3,
   BookOpen,
-  CreditCard,
-  Database,
+  CalendarDays,
   FileCheck,
   FileText,
-  Folder,
   GraduationCap,
   LayoutDashboard,
   Settings,
@@ -45,21 +43,21 @@ export const adminNavigation: NavGroup[] = [
     ],
   },
   {
-    label: "REGISTRAR MANAGEMENT",
-    items: [
-      { title: "Student Info Database", href: "/student-info", icon: Database, roles: ["admin", "registrar"] },
-      { title: "Student RFID Generate", href: "/rfid-generate", icon: CreditCard, roles: ["admin", "staff", "registrar"] },
-      { title: "Digital File Storage", href: "/file-storage", icon: Folder, roles: ["admin", "staff", "registrar"] },
-      { title: "Health Record Management", href: "/heath-record", icon: Activity, roles: ["admin", "staff", "registrar"] },
-    ],
-  },
-  {
     label: "Administration",
     items: [
       { title: "Academic Programs", href: "/admin/programs", icon: BookOpen, roles: ["admin"] },
       { title: "User Accounts", href: "/admin/accounts", icon: UserCheck, roles: ["admin"] },
     ],
   },
+  {
+    label: "REGISTRAR MANAGEMENT",
+    items: [
+      { title: "student info database", href: "/student-info", icon: FileCheck, roles: ["admin", "registrar"] },
+      { title: "student RFID generate", href: "/rfid-generate", icon: Users, roles: ["admin", "staff", "registrar"] },
+      { title: "Digital file storage", href: "/file-storage", icon: Users, roles: ["admin", "staff", "registrar"] },
+      { title: "Heath record management", href: "/heath-record", icon: Users, roles: ["admin", "staff", "registrar"] },
+    ],
+  }
 ]
 
 // Staff / Registrar navigation structure
@@ -74,16 +72,7 @@ export const staffNavigation: NavGroup[] = [
     label: "Enrollment Management",
     items: [
       { title: "Pre Register", href: "/pre-register", icon: FileCheck },
-      { title: "Applicant Directory", href: "/applicant", icon: Users },
-    ],
-  },
-  {
-    label: "REGISTRAR MANAGEMENT",
-    items: [
-      { title: "Student Info Database", href: "/student-info", icon: Database },
-      { title: "Student RFID Generate", href: "/rfid-generate", icon: CreditCard },
-      { title: "Digital File Storage", href: "/file-storage", icon: Folder },
-      { title: "Health Record Management", href: "/heath-record", icon: Activity },
+      { title: "Applicant Directory", href: "/student", icon: Users },
     ],
   },
 ]
