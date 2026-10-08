@@ -333,31 +333,31 @@ export default function ApplicantDirectoryPage() {
             </PageHeader>
 
             {/* Search & Filter Bar */}
-            <Card className="border-slate-200 bg-white shadow-sm">
+            <Card className="border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-sm">
                 <CardContent className="p-4">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         {/* Search Input */}
                         <div className="relative flex-1 max-w-md">
-                            <Search className="absolute left-3 top-2.5 size-4 text-slate-400" />
+                            <Search className="absolute left-3 top-2.5 size-4 text-slate-400 dark:text-emerald-500/70" />
                             <Input
                                 placeholder="Search by ID, name, or email..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-9 text-xs h-9"
+                                className="pl-9 text-xs h-9 dark:bg-[#030705] dark:border-emerald-900 dark:text-emerald-100"
                             />
                         </div>
 
                         <div className="flex items-center gap-3">
                             {/* Decision Status Filter */}
                             <div className="flex items-center gap-1.5">
-                                <Filter className="size-3.5 text-slate-400" />
-                                <span className="text-xs font-semibold text-slate-500 shrink-0">
+                                <Filter className="size-3.5 text-slate-400 dark:text-emerald-500/70" />
+                                <span className="text-xs font-semibold text-slate-500 dark:text-emerald-400/80 shrink-0">
                                     Decision:
                                 </span>
                                 <select
                                     value={selectedStatus}
                                     onChange={(e) => setSelectedStatus(e.target.value)}
-                                    className="h-9 rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950"
+                                    className="h-9 rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 text-xs text-slate-900 dark:text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
                                     <option value="ALL">All Decisions</option>
                                     <option value="Enrolled">Enrolled</option>
@@ -367,13 +367,13 @@ export default function ApplicantDirectoryPage() {
 
                             {/* Program Filter Dropdown */}
                             <div className="flex items-center gap-1.5">
-                                <span className="text-xs font-semibold text-slate-500 shrink-0">
+                                <span className="text-xs font-semibold text-slate-500 dark:text-emerald-400/80 shrink-0">
                                     Program:
                                 </span>
                                 <select
                                     value={selectedProgram}
                                     onChange={(e) => setSelectedProgram(e.target.value)}
-                                    className="h-9 rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950"
+                                    className="h-9 rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 text-xs text-slate-900 dark:text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
                                     <option value="ALL">All Programs</option>
                                     {availablePrograms.map((prog) => (
@@ -389,33 +389,33 @@ export default function ApplicantDirectoryPage() {
             </Card>
 
             {/* Directory Table */}
-            <Card className="border-slate-200 bg-white shadow-sm">
-                <CardHeader className="border-b border-slate-100 py-4">
-                    <CardTitle className="text-base font-bold text-slate-800 flex items-center justify-between">
+            <Card className="border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-sm">
+                <CardHeader className="border-b border-slate-100 dark:border-emerald-950 py-4">
+                    <CardTitle className="text-base font-bold text-slate-800 dark:text-emerald-100 flex items-center justify-between">
                         <span>Processed Applicant Records ({filteredApplicants.length})</span>
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                     {isLoading ? (
-                        <p className="py-12 text-center text-xs text-slate-500">
+                        <p className="py-12 text-center text-xs text-slate-500 dark:text-emerald-500">
                             Loading applicant directory...
                         </p>
                     ) : filteredApplicants.length === 0 ? (
-                        <p className="py-12 text-center text-xs text-slate-500">
+                        <p className="py-12 text-center text-xs text-slate-500 dark:text-emerald-500">
                             No processed applicant records found.
                         </p>
                     ) : (
                         <Table>
                             <TableHeader>
-                                <TableRow className="bg-slate-50/50">
-                                    <TableHead className="text-xs font-semibold">ID / Student No.</TableHead>
-                                    <TableHead className="text-xs font-semibold">Applicant Name</TableHead>
-                                    <TableHead className="text-xs font-semibold">Contact & Email</TableHead>
-                                    <TableHead className="text-xs font-semibold">Program</TableHead>
-                                    <TableHead className="text-xs font-semibold">Year & Term</TableHead>
-                                    <TableHead className="text-xs font-semibold">Decision Date</TableHead>
-                                    <TableHead className="text-xs font-semibold">Decision Status</TableHead>
-                                    <TableHead className="text-xs font-semibold text-right">Actions</TableHead>
+                                <TableRow className="bg-slate-50/50 dark:bg-emerald-950/40">
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">ID / Student No.</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Applicant Name</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Contact & Email</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Program</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Year & Term</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Decision Date</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Decision Status</TableHead>
+                                    <TableHead className="text-xs font-semibold text-right text-slate-700 dark:text-emerald-300">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -423,29 +423,29 @@ export default function ApplicantDirectoryPage() {
                                     <TableRow
                                         key={app.id}
                                         onClick={() => setSelectedApplicant(app)}
-                                        className="hover:bg-slate-50/80 cursor-pointer transition-colors"
+                                        className="hover:bg-slate-50/80 dark:hover:bg-emerald-950/30 cursor-pointer transition-colors"
                                     >
-                                        <TableCell className="font-mono text-xs font-bold text-slate-900">
+                                        <TableCell className="font-mono text-xs font-bold text-slate-900 dark:text-emerald-100">
                                             {app.student_number}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col">
-                                                <span className="text-xs font-semibold text-slate-900">
+                                                <span className="text-xs font-semibold text-slate-900 dark:text-emerald-100">
                                                     {app.full_name}
                                                 </span>
-                                                <span className="text-[10px] text-slate-500 truncate max-w-[180px]" title={app.address}>
+                                                <span className="text-[10px] text-slate-500 dark:text-emerald-500/80 truncate max-w-[180px]" title={app.address}>
                                                     {app.address}
                                                 </span>
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            <div className="flex flex-col space-y-0.5 text-[11px] text-slate-600">
+                                            <div className="flex flex-col space-y-0.5 text-[11px] text-slate-600 dark:text-emerald-300/80">
                                                 <span className="flex items-center gap-1.5">
-                                                    <Mail className="size-3 text-slate-400" />
+                                                    <Mail className="size-3 text-slate-400 dark:text-emerald-500" />
                                                     {app.email}
                                                 </span>
-                                                <span className="flex items-center gap-1.5 text-slate-500">
-                                                    <Phone className="size-3 text-slate-400" />
+                                                <span className="flex items-center gap-1.5 text-slate-500 dark:text-emerald-500/80">
+                                                    <Phone className="size-3 text-slate-400 dark:text-emerald-500" />
                                                     {app.contact_number}
                                                 </span>
                                             </div>
@@ -502,35 +502,35 @@ export default function ApplicantDirectoryPage() {
             {/* View Applicant Detail Modal */}
             {selectedApplicant && !editingApplicant && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs"
                     onClick={() => setSelectedApplicant(null)}
                 >
                     <div
-                        className="w-full max-w-lg rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                        className="w-full max-w-lg rounded-xl border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-900 dark:text-emerald-50"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-6 py-4">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-emerald-950 bg-slate-50 dark:bg-[#070d0a] px-6 py-4">
                             <div className="flex items-center gap-2">
-                                <User className="size-5 text-slate-600" />
-                                <h3 className="text-base font-bold text-slate-800">
+                                <User className="size-5 text-slate-600 dark:text-emerald-400" />
+                                <h3 className="text-base font-bold text-slate-800 dark:text-emerald-100">
                                     Applicant Record Details
                                 </h3>
                             </div>
                             <button
                                 onClick={() => setSelectedApplicant(null)}
-                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700 transition-colors cursor-pointer"
+                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 dark:hover:bg-emerald-950 dark:hover:text-emerald-200 transition-colors cursor-pointer"
                             >
                                 <X className="size-5" />
                             </button>
                         </div>
 
                         {/* Modal Body */}
-                        <div className="space-y-6 p-6 text-xs text-slate-700">
+                        <div className="space-y-6 p-6 text-xs text-slate-700 dark:text-emerald-200">
                             {/* Profile Details */}
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between">
-                                    <span className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">
+                                    <span className="font-semibold text-slate-500 dark:text-emerald-500/80 uppercase tracking-wider text-[10px]">
                                         Personal Profile
                                     </span>
                                     <StatusBadge
@@ -544,68 +544,68 @@ export default function ApplicantDirectoryPage() {
                                     </StatusBadge>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 rounded-lg bg-slate-50 p-4 border border-slate-100">
+                                <div className="grid grid-cols-2 gap-4 rounded-lg bg-slate-50 dark:bg-[#030705] p-4 border border-slate-100 dark:border-emerald-900">
                                     <div>
-                                        <p className="text-[10px] text-slate-400 uppercase font-medium">
+                                        <p className="text-[10px] text-slate-400 dark:text-emerald-500/70 uppercase font-medium">
                                             Full Name
                                         </p>
-                                        <p className="font-bold text-slate-900 text-sm mt-0.5">
+                                        <p className="font-bold text-slate-900 dark:text-emerald-100 text-sm mt-0.5">
                                             {selectedApplicant.full_name}
                                         </p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] text-slate-400 uppercase font-medium">
+                                        <p className="text-[10px] text-slate-400 dark:text-emerald-500/70 uppercase font-medium">
                                             ID / Student No.
                                         </p>
-                                        <p className="font-mono font-bold text-slate-900 text-sm mt-0.5">
+                                        <p className="font-mono font-bold text-slate-900 dark:text-emerald-100 text-sm mt-0.5">
                                             {selectedApplicant.student_number}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="space-y-2 pt-1">
-                                    <div className="flex items-center gap-2 text-slate-600">
-                                        <Mail className="size-4 text-slate-400 shrink-0" />
+                                    <div className="flex items-center gap-2 text-slate-600 dark:text-emerald-300">
+                                        <Mail className="size-4 text-slate-400 dark:text-emerald-500 shrink-0" />
                                         <span>{selectedApplicant.email}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-slate-600">
-                                        <Phone className="size-4 text-slate-400 shrink-0" />
+                                    <div className="flex items-center gap-2 text-slate-600 dark:text-emerald-300">
+                                        <Phone className="size-4 text-slate-400 dark:text-emerald-500 shrink-0" />
                                         <span>{selectedApplicant.contact_number}</span>
                                     </div>
-                                    <div className="flex items-start gap-2 text-slate-600">
-                                        <MapPin className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                    <div className="flex items-start gap-2 text-slate-600 dark:text-emerald-300">
+                                        <MapPin className="size-4 text-slate-400 dark:text-emerald-500 shrink-0 mt-0.5" />
                                         <span>{selectedApplicant.address}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <hr className="border-slate-100" />
+                            <hr className="border-slate-100 dark:border-emerald-950" />
 
                             {/* Academic Details */}
                             <div className="space-y-3">
-                                <span className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">
+                                <span className="font-semibold text-slate-500 dark:text-emerald-500/80 uppercase tracking-wider text-[10px]">
                                     Academic Record Details
                                 </span>
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="flex items-start gap-2">
-                                        <GraduationCap className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                        <GraduationCap className="size-4 text-slate-400 dark:text-emerald-500 shrink-0 mt-0.5" />
                                         <div>
-                                            <p className="text-[10px] text-slate-400">Course / Program</p>
-                                            <p className="font-semibold text-slate-800">
+                                            <p className="text-[10px] text-slate-400 dark:text-emerald-500/70">Course / Program</p>
+                                            <p className="font-semibold text-slate-800 dark:text-emerald-100">
                                                 {selectedApplicant.program} - {selectedApplicant.program_name}
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-start gap-2">
-                                        <Calendar className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                        <Calendar className="size-4 text-slate-400 dark:text-emerald-500 shrink-0 mt-0.5" />
                                         <div>
-                                            <p className="text-[10px] text-slate-400">Year & Term</p>
-                                            <p className="font-semibold text-slate-800">
+                                            <p className="text-[10px] text-slate-400 dark:text-emerald-500/70">Year & Term</p>
+                                            <p className="font-semibold text-slate-800 dark:text-emerald-100">
                                                 {selectedApplicant.year_level} ({selectedApplicant.semester})
                                             </p>
-                                            <p className="text-[10px] text-slate-500">
+                                            <p className="text-[10px] text-slate-500 dark:text-emerald-500/60">
                                                 Academic Year {selectedApplicant.academic_year}
                                             </p>
                                         </div>
@@ -615,15 +615,15 @@ export default function ApplicantDirectoryPage() {
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-3">
-                            <span className="text-[10px] text-slate-400">
+                        <div className="flex items-center justify-between border-t border-slate-100 dark:border-emerald-950 bg-slate-50 dark:bg-[#070d0a] px-6 py-3">
+                            <span className="text-[10px] text-slate-400 dark:text-emerald-500/70">
                                 Processed on {selectedApplicant.decision_date}
                             </span>
                             <div className="flex items-center gap-2">
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-8 px-3 text-xs gap-1.5 cursor-pointer"
+                                    className="h-8 px-3 text-xs gap-1.5 cursor-pointer dark:border-emerald-900 dark:bg-[#030705] dark:text-emerald-300 dark:hover:bg-emerald-950"
                                     onClick={() => setEditingApplicant(selectedApplicant)}
                                 >
                                     <Pencil className="size-3.5" />
@@ -632,7 +632,7 @@ export default function ApplicantDirectoryPage() {
                                 <Button
                                     size="sm"
                                     variant="secondary"
-                                    className="h-8 px-3 text-xs cursor-pointer"
+                                    className="h-8 px-3 text-xs cursor-pointer dark:bg-emerald-950/80 dark:text-emerald-300 dark:border dark:border-emerald-900"
                                     onClick={() => setSelectedApplicant(null)}
                                 >
                                     Close
@@ -646,24 +646,24 @@ export default function ApplicantDirectoryPage() {
             {/* Edit Applicant Form Modal */}
             {editingApplicant && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs"
                     onClick={() => setEditingApplicant(null)}
                 >
                     <div
-                        className="w-full max-w-xl rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                        className="w-full max-w-xl rounded-xl border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-900 dark:text-emerald-50"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-6 py-4">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-emerald-950 bg-slate-50 dark:bg-[#070d0a] px-6 py-4">
                             <div className="flex items-center gap-2">
-                                <Pencil className="size-4 text-slate-700" />
-                                <h3 className="text-base font-bold text-slate-800">
+                                <Pencil className="size-4 text-slate-700 dark:text-emerald-400" />
+                                <h3 className="text-base font-bold text-slate-800 dark:text-emerald-100">
                                     Edit Applicant Record
                                 </h3>
                             </div>
                             <button
                                 onClick={() => setEditingApplicant(null)}
-                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700 transition-colors cursor-pointer"
+                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 dark:hover:bg-emerald-950 dark:hover:text-emerald-200 transition-colors cursor-pointer"
                             >
                                 <X className="size-5" />
                             </button>

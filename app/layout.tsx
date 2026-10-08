@@ -4,6 +4,7 @@ import NextTopLoader from "nextjs-toploader"
 import "./global.css"
 import { cn } from "@/lib/utils"
 import { Toaster } from "@/components/ui/sonner"
+import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -30,6 +31,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
+            suppressHydrationWarning
             className={cn(
                 "h-full",
                 "antialiased",
@@ -39,20 +41,27 @@ export default function RootLayout({
                 inter.variable
             )}
         >
-            <body className="min-h-full flex flex-col">
-                <NextTopLoader
-                    color="#1f6feb"
-                    height={4}
-                    showSpinner={false}
-                    crawl
-                    easing="ease"
-                    speed={250}
-                    shadow="0 0 10px #1f6feb, 0 0 5px #1f6feb"
-                />
+            <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-200">
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <NextTopLoader
+                        color="#1f6feb"
+                        height={4}
+                        showSpinner={false}
+                        crawl
+                        easing="ease"
+                        speed={250}
+                        shadow="0 0 10px #1f6feb, 0 0 5px #1f6feb"
+                    />
 
-                {children}
+                    {children}
 
-                <Toaster />
+                    <Toaster />
+                </ThemeProvider>
             </body>
         </html>
     )

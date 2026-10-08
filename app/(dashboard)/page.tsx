@@ -291,36 +291,36 @@ export default function EnrollmentDashboardPage() {
                     <CardContent className="space-y-4">
                         <Link
                             href="/pre-register"
-                            className="flex items-center justify-between rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
+                            className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60"
                         >
                             <div className="space-y-1">
-                                <p className="text-sm font-medium text-slate-900">
+                                <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                                     Pre-Registered Applications
                                 </p>
                                 <p className="text-xs text-muted-foreground">
                                     Review and manage online student enrollment submissions.
                                 </p>
                             </div>
-                            <span className="text-xs font-semibold text-blue-600">View Applications &rarr;</span>
+                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">View Applications &rarr;</span>
                         </Link>
 
                         <Link
-                            href="/student"
-                            className="flex items-center justify-between rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
+                            href="/applicant"
+                            className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60"
                         >
                             <div className="space-y-1">
-                                <p className="text-sm font-medium text-slate-900">
+                                <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                                     Applicant Directory
                                 </p>
                                 <p className="text-xs text-muted-foreground">
                                     View processed applicant records with finalized decisions (Enrolled or Rejected).
                                 </p>
                             </div>
-                            <ArrowRight className="size-4 text-slate-400" />
+                            <ArrowRight className="size-4 text-slate-400 dark:text-slate-500" />
                         </Link>
                     </CardContent>
                     <div className="p-6 pt-0">
-                        <div className="flex items-center gap-2 rounded-md bg-emerald-50 p-3 text-xs text-emerald-700 border border-emerald-100">
+                        <div className="flex items-center gap-2 rounded-md bg-emerald-50 dark:bg-emerald-950/40 p-3 text-xs text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900">
                             <CheckCircle2 className="size-4 shrink-0" />
                             <span>Realtime sync active for enrollment updates.</span>
                         </div>

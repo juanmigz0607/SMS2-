@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, Loader2, UserPlus, ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { enrollStudentAction } from "./action";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type OptionItem = {
     id: string;
@@ -83,38 +84,41 @@ export default function PublicEnrollmentPage() {
     }
 
     const inputStyles =
-        "flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50";
+        "flex h-10 w-full rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 py-2 text-xs text-slate-900 dark:text-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50";
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-emerald-50 transition-colors duration-200">
             {/* Top Navigation Header for Public Form */}
-            <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 shadow-sm">
+            <header className="flex h-16 items-center justify-between border-b border-slate-200 dark:border-emerald-950 bg-white dark:bg-[#070d0a] px-6 shadow-xs">
                 <div className="flex items-center gap-3">
                     <Image
                         src="/sms2.png"
                         alt="SMS 2"
                         width={120}
                         height={32}
-                        className="h-8 w-auto object-contain"
+                        className="h-8 w-auto object-contain dark:brightness-125 dark:drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]"
                         priority
                     />
                 </div>
-                <Link
-                    href="/login"
-                    className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-slate-900"
-                >
-                    <ArrowLeft className="size-4" />
-                    Back to Sign In
-                </Link>
+                <div className="flex items-center gap-4">
+                    <ThemeToggle variant="ghost" size="icon" className="size-8 text-slate-600 dark:text-emerald-400" />
+                    <Link
+                        href="/login"
+                        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-emerald-400 hover:text-slate-900 dark:hover:text-emerald-200"
+                    >
+                        <ArrowLeft className="size-4" />
+                        Back to Sign In
+                    </Link>
+                </div>
             </header>
 
             {/* Main Content Area */}
             <main className="flex justify-center p-6 md:p-10">
                 <div className="w-full max-w-3xl space-y-6">
-                    <Card className="rounded-xl border-slate-200 bg-white shadow-md">
-                        <CardHeader className="border-b border-slate-100 pb-4">
-                            <CardTitle className="flex items-center gap-2 text-xl font-bold text-slate-800">
-                                <UserPlus className="size-5 text-slate-600" />
+                    <Card className="rounded-xl border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-md text-slate-900 dark:text-emerald-50">
+                        <CardHeader className="border-b border-slate-100 dark:border-emerald-950 pb-4">
+                            <CardTitle className="flex items-center gap-2 text-xl font-bold text-slate-800 dark:text-emerald-100">
+                                <UserPlus className="size-5 text-slate-600 dark:text-emerald-400" />
                                 Student Online Application Form
                             </CardTitle>
                         </CardHeader>

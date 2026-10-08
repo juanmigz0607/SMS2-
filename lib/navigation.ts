@@ -10,6 +10,7 @@ import {
   Settings,
   ShieldCheck,
   UserCheck,
+  UserCog,
   UserPlus,
   Users,
 } from "lucide-react"
@@ -20,6 +21,7 @@ export type NavItem = {
   icon: LucideIcon
   target?: "_self" | "_blank"
   roles?: string[]
+  children?: NavItem[]
 }
 
 export type NavGroup = {
@@ -56,6 +58,16 @@ export const adminNavigation: NavGroup[] = [
       { title: "student RFID generate", href: "/rfid-generate", icon: Users, roles: ["admin", "staff", "registrar"] },
       { title: "Digital file storage", href: "/file-storage", icon: Users, roles: ["admin", "staff", "registrar"] },
       { title: "Heath record management", href: "/heath-record", icon: Users, roles: ["admin", "staff", "registrar"] },
+      {
+        title: "Human Resources",
+        href: "/human-resources",
+        icon: UserCog,
+        roles: ["admin", "registrar"],
+        children: [
+          { title: "Registration Staff", href: "/human-resources/registration-staff", icon: UserCheck, roles: ["admin", "registrar"] },
+          { title: "Faculty", href: "/human-resources/faculty", icon: GraduationCap, roles: ["admin", "registrar"] },
+        ],
+      },
     ],
   }
 ]
@@ -91,7 +103,7 @@ export const studentNavigation: NavGroup[] = [
 
 // Helper function to get navigation based on role
 export function getNavigationForRole(role: string | null | undefined) {
-  if (role === "admin") {
+  if (role === "admin" || role === "registrar") {
     return adminNavigation
   }
   return staffNavigation
@@ -101,7 +113,7 @@ export function getNavigationForRole(role: string | null | undefined) {
 export const navigation = [...adminNavigation, ...staffNavigation]
 
 export const allNavItems = [...adminNavigation, ...staffNavigation, ...studentNavigation].flatMap(
-  (group) => group.items
+  (group) => group.items.flatMap((item) => (item.children ? [item, ...item.children] : [item]))
 )
 
 export function getPageTitle(pathname: string): string {

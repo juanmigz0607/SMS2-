@@ -282,83 +282,83 @@ export default function PreRegisterPage() {
 
             {/* Stat Cards Overview */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Card className="border-slate-200 bg-white shadow-sm">
+                <Card className="border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-xs font-semibold text-slate-500">
+                        <CardTitle className="text-xs font-semibold text-slate-500 dark:text-emerald-500/80">
                             Total Pre-Registrations
                         </CardTitle>
-                        <FileCheck className="size-4 text-slate-500" />
+                        <FileCheck className="size-4 text-slate-500 dark:text-emerald-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{stats.total}</div>
-                        <p className="text-[10px] text-slate-400">All submitted applications</p>
+                        <div className="text-2xl font-bold text-slate-900 dark:text-emerald-100">{stats.total}</div>
+                        <p className="text-[10px] text-slate-400 dark:text-emerald-500/70">All submitted applications</p>
                     </CardContent>
                 </Card>
 
-                <Card className="border-amber-200 bg-amber-50/30 shadow-sm">
+                <Card className="border-amber-200 dark:border-amber-900/60 bg-amber-50/30 dark:bg-amber-950/20 shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-xs font-semibold text-amber-700">
+                        <CardTitle className="text-xs font-semibold text-amber-700 dark:text-amber-400">
                             Pending Review
                         </CardTitle>
-                        <Clock className="size-4 text-amber-600" />
+                        <Clock className="size-4 text-amber-600 dark:text-amber-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-amber-900">{stats.pending}</div>
-                        <p className="text-[10px] text-amber-600">Awaiting approval</p>
+                        <div className="text-2xl font-bold text-amber-900 dark:text-amber-200">{stats.pending}</div>
+                        <p className="text-[10px] text-amber-600 dark:text-amber-400/80">Awaiting approval</p>
                     </CardContent>
                 </Card>
 
-                <Card className="border-emerald-200 bg-emerald-50/30 shadow-sm">
+                <Card className="border-emerald-200 dark:border-emerald-900/80 bg-emerald-50/30 dark:bg-emerald-950/20 shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-xs font-semibold text-emerald-700">
+                        <CardTitle className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                             Enrolled / Approved
                         </CardTitle>
-                        <CheckCircle2 className="size-4 text-emerald-600" />
+                        <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-emerald-900">{stats.enrolled}</div>
-                        <p className="text-[10px] text-emerald-600">Verified and enrolled</p>
+                        <div className="text-2xl font-bold text-emerald-900 dark:text-emerald-200">{stats.enrolled}</div>
+                        <p className="text-[10px] text-emerald-600 dark:text-emerald-400/80">Verified and enrolled</p>
                     </CardContent>
                 </Card>
 
-                <Card className="border-red-200 bg-red-50/30 shadow-sm">
+                <Card className="border-red-200 dark:border-red-900/60 bg-red-50/30 dark:bg-red-950/20 shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-xs font-semibold text-red-700">
+                        <CardTitle className="text-xs font-semibold text-red-700 dark:text-red-400">
                             Rejected Applications
                         </CardTitle>
-                        <XCircle className="size-4 text-red-600" />
+                        <XCircle className="size-4 text-red-600 dark:text-red-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-red-900">{stats.rejected}</div>
-                        <p className="text-[10px] text-red-600">Declined registrations</p>
+                        <div className="text-2xl font-bold text-red-900 dark:text-red-200">{stats.rejected}</div>
+                        <p className="text-[10px] text-red-600 dark:text-red-400/80">Declined registrations</p>
                     </CardContent>
                 </Card>
             </div>
 
             {/* Filter & Search Bar */}
-            <Card className="border-slate-200 bg-white shadow-sm">
+            <Card className="border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-sm">
                 <CardContent className="p-4">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div className="relative flex-1 max-w-md">
-                            <Search className="absolute left-3 top-2.5 size-4 text-slate-400" />
+                            <Search className="absolute left-3 top-2.5 size-4 text-slate-400 dark:text-emerald-500/70" />
                             <Input
                                 placeholder="Search by ID, name, or email..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-9 text-xs h-9"
+                                className="pl-9 text-xs h-9 dark:bg-[#030705] dark:border-emerald-900 dark:text-emerald-100"
                             />
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className="flex items-center gap-1.5">
-                                <Filter className="size-3.5 text-slate-400" />
-                                <span className="text-xs font-semibold text-slate-500 shrink-0">
+                                <Filter className="size-3.5 text-slate-400 dark:text-emerald-500/70" />
+                                <span className="text-xs font-semibold text-slate-500 dark:text-emerald-400/80 shrink-0">
                                     Status:
                                 </span>
                                 <select
                                     value={selectedStatus}
                                     onChange={(e) => setSelectedStatus(e.target.value)}
-                                    className="h-9 rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950"
+                                    className="h-9 rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 text-xs text-slate-900 dark:text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
                                     <option value="ALL">All Statuses</option>
                                     <option value="Pending">Pending</option>
@@ -368,13 +368,13 @@ export default function PreRegisterPage() {
                             </div>
 
                             <div className="flex items-center gap-1.5">
-                                <span className="text-xs font-semibold text-slate-500 shrink-0">
+                                <span className="text-xs font-semibold text-slate-500 dark:text-emerald-400/80 shrink-0">
                                     Program:
                                 </span>
                                 <select
                                     value={selectedProgram}
                                     onChange={(e) => setSelectedProgram(e.target.value)}
-                                    className="h-9 rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950"
+                                    className="h-9 rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 text-xs text-slate-900 dark:text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
                                     <option value="ALL">All Programs</option>
                                     {availablePrograms.map((prog) => (
@@ -390,33 +390,33 @@ export default function PreRegisterPage() {
             </Card>
 
             {/* Applications Table */}
-            <Card className="border-slate-200 bg-white shadow-sm">
-                <CardHeader className="border-b border-slate-100 py-4">
-                    <CardTitle className="text-base font-bold text-slate-800">
+            <Card className="border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-sm">
+                <CardHeader className="border-b border-slate-100 dark:border-emerald-950 py-4">
+                    <CardTitle className="text-base font-bold text-slate-800 dark:text-emerald-100">
                         Pre-Registration Applications ({filteredApplications.length})
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                     {isLoading ? (
-                        <p className="py-12 text-center text-xs text-slate-500">
+                        <p className="py-12 text-center text-xs text-slate-500 dark:text-emerald-500">
                             Loading pre-registration applications...
                         </p>
                     ) : filteredApplications.length === 0 ? (
-                        <p className="py-12 text-center text-xs text-slate-500">
+                        <p className="py-12 text-center text-xs text-slate-500 dark:text-emerald-500">
                             No pre-registration applications found.
                         </p>
                     ) : (
                         <Table>
                             <TableHeader>
-                                <TableRow className="bg-slate-50/50">
-                                    <TableHead className="text-xs font-semibold">ID / Student No.</TableHead>
-                                    <TableHead className="text-xs font-semibold">Applicant Name</TableHead>
-                                    <TableHead className="text-xs font-semibold">Contact Details</TableHead>
-                                    <TableHead className="text-xs font-semibold">Program</TableHead>
-                                    <TableHead className="text-xs font-semibold">Year & Term</TableHead>
-                                    <TableHead className="text-xs font-semibold">Submitted On</TableHead>
-                                    <TableHead className="text-xs font-semibold">Status</TableHead>
-                                    <TableHead className="text-xs font-semibold text-right">Actions</TableHead>
+                                <TableRow className="bg-slate-50/50 dark:bg-emerald-950/40">
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">ID / Student No.</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Applicant Name</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Contact Details</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Program</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Year & Term</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Submitted On</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Status</TableHead>
+                                    <TableHead className="text-xs font-semibold text-right text-slate-700 dark:text-emerald-300">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -427,19 +427,19 @@ export default function PreRegisterPage() {
                                         <TableRow
                                             key={app.id}
                                             onClick={() => setSelectedApplicant(app)}
-                                            className="hover:bg-slate-50/80 cursor-pointer transition-colors"
+                                            className="hover:bg-slate-50/80 dark:hover:bg-emerald-950/30 cursor-pointer transition-colors"
                                         >
-                                            <TableCell className="font-mono text-xs font-bold text-slate-900">
+                                            <TableCell className="font-mono text-xs font-bold text-slate-900 dark:text-emerald-100">
                                                 {app.student_number}
                                             </TableCell>
 
                                             <TableCell>
                                                 <div className="flex flex-col">
-                                                    <span className="text-xs font-semibold text-slate-900">
+                                                    <span className="text-xs font-semibold text-slate-900 dark:text-emerald-100">
                                                         {app.full_name}
                                                     </span>
                                                     <span
-                                                        className="text-[10px] text-slate-500 truncate max-w-[180px]"
+                                                        className="text-[10px] text-slate-500 dark:text-emerald-500/80 truncate max-w-[180px]"
                                                         title={app.address}
                                                     >
                                                         {app.address}
@@ -542,35 +542,35 @@ export default function PreRegisterPage() {
             {/* Applicant Profile Popup Modal */}
             {selectedApplicant && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs"
                     onClick={() => setSelectedApplicant(null)}
                 >
                     <div
-                        className="w-full max-w-lg rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                        className="w-full max-w-lg rounded-xl border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-900 dark:text-emerald-50"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-6 py-4">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-emerald-950 bg-slate-50 dark:bg-[#070d0a] px-6 py-4">
                             <div className="flex items-center gap-2">
-                                <User className="size-5 text-slate-600" />
-                                <h3 className="text-base font-bold text-slate-800">
+                                <User className="size-5 text-slate-600 dark:text-emerald-400" />
+                                <h3 className="text-base font-bold text-slate-800 dark:text-emerald-100">
                                     Applicant Information
                                 </h3>
                             </div>
                             <button
                                 onClick={() => setSelectedApplicant(null)}
-                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700 transition-colors cursor-pointer"
+                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 dark:hover:bg-emerald-950 dark:hover:text-emerald-200 transition-colors cursor-pointer"
                             >
                                 <X className="size-5" />
                             </button>
                         </div>
 
                         {/* Modal Body */}
-                        <div className="space-y-6 p-6 text-xs text-slate-700">
+                        <div className="space-y-6 p-6 text-xs text-slate-700 dark:text-emerald-200">
                             {/* Profile Details */}
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between">
-                                    <span className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">
+                                    <span className="font-semibold text-slate-500 dark:text-emerald-500/80 uppercase tracking-wider text-[10px]">
                                         Personal Information
                                     </span>
                                     <StatusBadge
@@ -586,68 +586,68 @@ export default function PreRegisterPage() {
                                     </StatusBadge>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 rounded-lg bg-slate-50 p-4 border border-slate-100">
+                                <div className="grid grid-cols-2 gap-4 rounded-lg bg-slate-50 dark:bg-[#030705] p-4 border border-slate-100 dark:border-emerald-900">
                                     <div>
-                                        <p className="text-[10px] text-slate-400 uppercase font-medium">
+                                        <p className="text-[10px] text-slate-400 dark:text-emerald-500/70 uppercase font-medium">
                                             Full Name
                                         </p>
-                                        <p className="font-bold text-slate-900 text-sm mt-0.5">
+                                        <p className="font-bold text-slate-900 dark:text-emerald-100 text-sm mt-0.5">
                                             {selectedApplicant.full_name}
                                         </p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] text-slate-400 uppercase font-medium">
+                                        <p className="text-[10px] text-slate-400 dark:text-emerald-500/70 uppercase font-medium">
                                             ID / Student No.
                                         </p>
-                                        <p className="font-mono font-bold text-slate-900 text-sm mt-0.5">
+                                        <p className="font-mono font-bold text-slate-900 dark:text-emerald-100 text-sm mt-0.5">
                                             {selectedApplicant.student_number}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="space-y-2 pt-1">
-                                    <div className="flex items-center gap-2 text-slate-600">
-                                        <Mail className="size-4 text-slate-400 shrink-0" />
+                                    <div className="flex items-center gap-2 text-slate-600 dark:text-emerald-300">
+                                        <Mail className="size-4 text-slate-400 dark:text-emerald-500 shrink-0" />
                                         <span>{selectedApplicant.email}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-slate-600">
-                                        <Phone className="size-4 text-slate-400 shrink-0" />
+                                    <div className="flex items-center gap-2 text-slate-600 dark:text-emerald-300">
+                                        <Phone className="size-4 text-slate-400 dark:text-emerald-500 shrink-0" />
                                         <span>{selectedApplicant.contact_number}</span>
                                     </div>
-                                    <div className="flex items-start gap-2 text-slate-600">
-                                        <MapPin className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                    <div className="flex items-start gap-2 text-slate-600 dark:text-emerald-300">
+                                        <MapPin className="size-4 text-slate-400 dark:text-emerald-500 shrink-0 mt-0.5" />
                                         <span>{selectedApplicant.address}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <hr className="border-slate-100" />
+                            <hr className="border-slate-100 dark:border-emerald-950" />
 
                             {/* Academic Details */}
                             <div className="space-y-3">
-                                <span className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">
+                                <span className="font-semibold text-slate-500 dark:text-emerald-500/80 uppercase tracking-wider text-[10px]">
                                     Academic Application Details
                                 </span>
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="flex items-start gap-2">
-                                        <GraduationCap className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                        <GraduationCap className="size-4 text-slate-400 dark:text-emerald-500 shrink-0 mt-0.5" />
                                         <div>
-                                            <p className="text-[10px] text-slate-400">Course / Program</p>
-                                            <p className="font-semibold text-slate-800">
+                                            <p className="text-[10px] text-slate-400 dark:text-emerald-500/70">Course / Program</p>
+                                            <p className="font-semibold text-slate-800 dark:text-emerald-100">
                                                 {selectedApplicant.program} - {selectedApplicant.program_name}
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-start gap-2">
-                                        <Calendar className="size-4 text-slate-400 shrink-0 mt-0.5" />
+                                        <Calendar className="size-4 text-slate-400 dark:text-emerald-500 shrink-0 mt-0.5" />
                                         <div>
-                                            <p className="text-[10px] text-slate-400">Year & Term</p>
-                                            <p className="font-semibold text-slate-800">
+                                            <p className="text-[10px] text-slate-400 dark:text-emerald-500/70">Year & Term</p>
+                                            <p className="font-semibold text-slate-800 dark:text-emerald-100">
                                                 {selectedApplicant.year_level} ({selectedApplicant.semester})
                                             </p>
-                                            <p className="text-[10px] text-slate-500">
+                                            <p className="text-[10px] text-slate-500 dark:text-emerald-500/60">
                                                 Academic Year {selectedApplicant.academic_year}
                                             </p>
                                         </div>
@@ -657,8 +657,8 @@ export default function PreRegisterPage() {
                         </div>
 
                         {/* Modal Footer / Actions */}
-                        <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-3">
-                            <span className="text-[10px] text-slate-400">
+                        <div className="flex items-center justify-between border-t border-slate-100 dark:border-emerald-950 bg-slate-50 dark:bg-[#070d0a] px-6 py-3">
+                            <span className="text-[10px] text-slate-400 dark:text-emerald-500/70">
                                 Submitted on {selectedApplicant.enrolled_at}
                             </span>
                             <div className="flex items-center gap-2">
