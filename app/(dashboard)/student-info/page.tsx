@@ -331,7 +331,7 @@ export default function StudentInfoPage() {
     }
 
     const selectStyle =
-        "h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-1 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950"
+        "h-9 w-full rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 py-1 text-xs text-slate-900 dark:text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
 
     return (
         <div className="space-y-6">
@@ -341,7 +341,7 @@ export default function StudentInfoPage() {
             >
                 <Link
                     href="/applicant"
-                    className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-2")}
+                    className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-2 dark:border-emerald-900 dark:bg-[#070d0a] dark:text-emerald-300 dark:hover:bg-emerald-950/60")}
                 >
                     <Users className="size-4" />
                     Applicant Directory
@@ -350,85 +350,85 @@ export default function StudentInfoPage() {
 
             {/* Stat Cards Overview */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Card className="border-slate-200 bg-white shadow-sm">
+                <Card className="border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-xs font-semibold text-slate-500">
+                        <CardTitle className="text-xs font-semibold text-slate-500 dark:text-emerald-500/80">
                             Total Registered Students
                         </CardTitle>
-                        <Users className="size-4 text-slate-500" />
+                        <Users className="size-4 text-slate-500 dark:text-emerald-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{stats.total}</div>
-                        <p className="text-[10px] text-slate-400">Total student directory records</p>
+                        <div className="text-2xl font-bold text-slate-900 dark:text-emerald-100">{stats.total}</div>
+                        <p className="text-[10px] text-slate-400 dark:text-emerald-500/70">Total student directory records</p>
                     </CardContent>
                 </Card>
 
-                <Card className="border-emerald-200 bg-emerald-50/30 shadow-sm">
+                <Card className="border-emerald-200 dark:border-emerald-900/80 bg-emerald-50/30 dark:bg-emerald-950/20 shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-xs font-semibold text-emerald-700">
+                        <CardTitle className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                             Active Students
                         </CardTitle>
-                        <UserCheck className="size-4 text-emerald-600" />
+                        <UserCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-emerald-900">{stats.active}</div>
-                        <p className="text-[10px] text-emerald-600">Currently enrolled & active</p>
+                        <div className="text-2xl font-bold text-emerald-900 dark:text-emerald-200">{stats.active}</div>
+                        <p className="text-[10px] text-emerald-600 dark:text-emerald-400/80">Currently enrolled & active</p>
                     </CardContent>
                 </Card>
 
-                <Card className="border-slate-200 bg-slate-50/50 shadow-sm">
+                <Card className="border-slate-200 dark:border-emerald-900/60 bg-slate-50/50 dark:bg-emerald-950/10 shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-xs font-semibold text-slate-600">
+                        <CardTitle className="text-xs font-semibold text-slate-600 dark:text-emerald-400/70">
                             Inactive / Inactive Term
                         </CardTitle>
-                        <UserX className="size-4 text-slate-400" />
+                        <UserX className="size-4 text-slate-400 dark:text-emerald-500/60" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-slate-800">{stats.inactive}</div>
-                        <p className="text-[10px] text-slate-400">Non-enrolled or inactive</p>
+                        <div className="text-2xl font-bold text-slate-800 dark:text-emerald-300">{stats.inactive}</div>
+                        <p className="text-[10px] text-slate-400 dark:text-emerald-500/70">Non-enrolled or inactive</p>
                     </CardContent>
                 </Card>
 
-                <Card className="border-blue-200 bg-blue-50/30 shadow-sm">
+                <Card className="border-blue-200 dark:border-blue-900/60 bg-blue-50/30 dark:bg-blue-950/20 shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-xs font-semibold text-blue-700">
+                        <CardTitle className="text-xs font-semibold text-blue-700 dark:text-blue-400">
                             Programs Represented
                         </CardTitle>
-                        <GraduationCap className="size-4 text-blue-600" />
+                        <GraduationCap className="size-4 text-blue-600 dark:text-blue-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-blue-900">{stats.activePrograms}</div>
-                        <p className="text-[10px] text-blue-600">Active degree programs</p>
+                        <div className="text-2xl font-bold text-blue-900 dark:text-blue-200">{stats.activePrograms}</div>
+                        <p className="text-[10px] text-blue-600 dark:text-blue-400/80">Active degree programs</p>
                     </CardContent>
                 </Card>
             </div>
 
             {/* Search & Filter Bar */}
-            <Card className="border-slate-200 bg-white shadow-sm">
+            <Card className="border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-sm">
                 <CardContent className="p-4">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         {/* Search Input */}
                         <div className="relative flex-1 max-w-md">
-                            <Search className="absolute left-3 top-2.5 size-4 text-slate-400" />
+                            <Search className="absolute left-3 top-2.5 size-4 text-slate-400 dark:text-emerald-500/70" />
                             <Input
                                 placeholder="Search by student no, name, or email..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-9 text-xs h-9"
+                                className="pl-9 text-xs h-9 dark:bg-[#030705] dark:border-emerald-900 dark:text-emerald-100"
                             />
                         </div>
 
                         <div className="flex items-center gap-3">
                             {/* Active Status Filter */}
                             <div className="flex items-center gap-1.5">
-                                <Filter className="size-3.5 text-slate-400" />
-                                <span className="text-xs font-semibold text-slate-500 shrink-0">
+                                <Filter className="size-3.5 text-slate-400 dark:text-emerald-500/70" />
+                                <span className="text-xs font-semibold text-slate-500 dark:text-emerald-400/80 shrink-0">
                                     Account Status:
                                 </span>
                                 <select
                                     value={selectedStatus}
                                     onChange={(e) => setSelectedStatus(e.target.value)}
-                                    className="h-9 rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950"
+                                    className="h-9 rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 text-xs text-slate-900 dark:text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
                                     <option value="ALL">All Statuses</option>
                                     <option value="ACTIVE">Active</option>
@@ -438,13 +438,13 @@ export default function StudentInfoPage() {
 
                             {/* Program Filter Dropdown */}
                             <div className="flex items-center gap-1.5">
-                                <span className="text-xs font-semibold text-slate-500 shrink-0">
+                                <span className="text-xs font-semibold text-slate-500 dark:text-emerald-400/80 shrink-0">
                                     Program:
                                 </span>
                                 <select
                                     value={selectedProgram}
                                     onChange={(e) => setSelectedProgram(e.target.value)}
-                                    className="h-9 rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950"
+                                    className="h-9 rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 text-xs text-slate-900 dark:text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
                                     <option value="ALL">All Programs</option>
                                     {availablePrograms.map((prog) => (
@@ -457,13 +457,13 @@ export default function StudentInfoPage() {
 
                             {/* School Year Filter Dropdown */}
                             <div className="flex items-center gap-1.5">
-                                <span className="text-xs font-semibold text-slate-500 shrink-0">
+                                <span className="text-xs font-semibold text-slate-500 dark:text-emerald-400/80 shrink-0">
                                     School Year:
                                 </span>
                                 <select
                                     value={selectedSchoolYear}
                                     onChange={(e) => setSelectedSchoolYear(e.target.value)}
-                                    className="h-9 rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950"
+                                    className="h-9 rounded-md border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#030705] px-3 text-xs text-slate-900 dark:text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
                                     <option value="ALL">All School Years</option>
                                     {availableSchoolYears.map((sy) => (
@@ -479,32 +479,32 @@ export default function StudentInfoPage() {
             </Card>
 
             {/* Student Directory Table */}
-            <Card className="border-slate-200 bg-white shadow-sm">
-                <CardHeader className="border-b border-slate-100 py-4">
-                    <CardTitle className="text-base font-bold text-slate-800 flex items-center justify-between">
+            <Card className="border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-sm">
+                <CardHeader className="border-b border-slate-100 dark:border-emerald-950 py-4">
+                    <CardTitle className="text-base font-bold text-slate-800 dark:text-emerald-100 flex items-center justify-between">
                         <span>Student Information Database ({filteredStudents.length})</span>
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                     {isLoading ? (
-                        <p className="py-12 text-center text-xs text-slate-500">
+                        <p className="py-12 text-center text-xs text-slate-500 dark:text-emerald-500">
                             Loading student database...
                         </p>
                     ) : filteredStudents.length === 0 ? (
-                        <p className="py-12 text-center text-xs text-slate-500">
+                        <p className="py-12 text-center text-xs text-slate-500 dark:text-emerald-500">
                             No student records found matching your filters.
                         </p>
                     ) : (
                         <Table>
                             <TableHeader>
-                                <TableRow className="bg-slate-50/50">
-                                    <TableHead className="text-xs font-semibold">Student No.</TableHead>
-                                    <TableHead className="text-xs font-semibold">Student Name</TableHead>
-                                    <TableHead className="text-xs font-semibold">Contact & Email</TableHead>
-                                    <TableHead className="text-xs font-semibold">Program</TableHead>
-                                    <TableHead className="text-xs font-semibold">Year & Term</TableHead>
-                                    <TableHead className="text-xs font-semibold">Status</TableHead>
-                                    <TableHead className="text-xs font-semibold text-right">Actions</TableHead>
+                                <TableRow className="bg-slate-50/50 dark:bg-emerald-950/40">
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Student No.</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Student Name</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Contact & Email</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Program</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Year & Term</TableHead>
+                                    <TableHead className="text-xs font-semibold text-slate-700 dark:text-emerald-300">Status</TableHead>
+                                    <TableHead className="text-xs font-semibold text-right text-slate-700 dark:text-emerald-300">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -512,67 +512,69 @@ export default function StudentInfoPage() {
                                     <TableRow
                                         key={student.id}
                                         onClick={() => setEditingStudent(student)}
-                                        className="hover:bg-slate-50/80 cursor-pointer transition-colors"
+                                        className="hover:bg-slate-50/80 dark:hover:bg-emerald-950/30 cursor-pointer transition-colors"
                                     >
-                                        <TableCell className="font-mono text-xs font-bold text-slate-900">
+                                        <TableCell className="font-mono text-xs font-bold text-slate-900 dark:text-emerald-100">
                                             {student.student_number}
                                         </TableCell>
 
                                         <TableCell>
                                             <div className="flex flex-col">
-                                                <span className="text-xs font-semibold text-slate-900">
+                                                <span className="text-xs font-semibold text-slate-900 dark:text-emerald-100">
                                                     {student.full_name}
                                                 </span>
-                                                <span className="text-[10px] text-slate-500 truncate max-w-[180px]" title={student.address}>
+                                                <span className="text-[10px] text-slate-500 dark:text-emerald-500/80 truncate max-w-[180px]" title={student.address}>
                                                     {student.address}
                                                 </span>
                                             </div>
                                         </TableCell>
 
                                         <TableCell>
-                                            <div className="flex flex-col space-y-0.5 text-[11px] text-slate-600">
+                                            <div className="flex flex-col space-y-0.5 text-[11px] text-slate-600 dark:text-emerald-300/80">
                                                 <span className="flex items-center gap-1.5">
-                                                    <Mail className="size-3 text-slate-400" />
+                                                    <Mail className="size-3 text-slate-400 dark:text-emerald-500" />
                                                     {student.email}
                                                 </span>
-                                                <span className="flex items-center gap-1.5 text-slate-500">
-                                                    <Phone className="size-3 text-slate-400" />
+                                                <span className="flex items-center gap-1.5 text-slate-500 dark:text-emerald-500/80">
+                                                    <Phone className="size-3 text-slate-400 dark:text-emerald-500" />
                                                     {student.contact_number}
                                                 </span>
                                             </div>
                                         </TableCell>
 
                                         <TableCell>
-                                            <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800">
+                                            <span className="inline-flex items-center rounded-md bg-slate-100 dark:bg-emerald-950/80 dark:border dark:border-emerald-800 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:text-emerald-300">
                                                 {student.program}
                                             </span>
                                         </TableCell>
 
-                                        <TableCell className="text-xs text-slate-700">
-                                            <div className="flex flex-col text-[11px] text-slate-700">
-                                                <span>{student.year_level}</span>
-                                                <span className="text-[10px] text-slate-400">{student.semester}</span>
+                                        <TableCell>
+                                            <div className="flex flex-col text-xs text-slate-700 dark:text-emerald-300/80">
+                                                <span className="font-medium">{student.year_level}</span>
+                                                <span className="text-[10px] text-slate-500 dark:text-emerald-500/70">
+                                                    {student.academic_year} &bull; {student.semester}
+                                                </span>
                                             </div>
                                         </TableCell>
 
                                         <TableCell>
                                             <StatusBadge status={student.isActive ? "success" : "default"}>
-                                                {student.isActive ? "Active" : "Inactive"}
+                                                {student.isActive ? "Active Student" : "Inactive Term"}
                                             </StatusBadge>
                                         </TableCell>
 
                                         <TableCell className="text-right">
                                             <Button
-                                                size="sm"
-                                                variant="outline"
-                                                className="h-7 px-2.5 text-[11px] border-slate-200 hover:bg-slate-100 text-slate-700 gap-1.5 cursor-pointer"
+                                                variant="ghost"
+                                                size="xs"
+                                                className="text-slate-600 dark:text-emerald-400 hover:text-slate-900 dark:hover:text-emerald-200"
                                                 onClick={(e) => {
                                                     e.stopPropagation()
                                                     setEditingStudent(student)
                                                 }}
                                             >
-                                                <Pencil className="size-3 text-slate-500" />
-                                                Edit
+                                                <Pencil className="size-3.5 mr-1" />
+                                                Edit Profile
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -586,24 +588,24 @@ export default function StudentInfoPage() {
             {/* Edit Student Info Modal */}
             {editingStudent && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs"
                     onClick={() => setEditingStudent(null)}
                 >
                     <div
-                        className="w-full max-w-xl rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                        className="w-full max-w-xl rounded-xl border border-slate-200 dark:border-emerald-900 bg-white dark:bg-[#09120e] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-900 dark:text-emerald-50"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-6 py-4">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-emerald-950 bg-slate-50 dark:bg-[#070d0a] px-6 py-4">
                             <div className="flex items-center gap-2">
-                                <Pencil className="size-4 text-slate-700" />
-                                <h3 className="text-base font-bold text-slate-800">
+                                <Pencil className="size-4 text-slate-700 dark:text-emerald-400" />
+                                <h3 className="text-base font-bold text-slate-800 dark:text-emerald-100">
                                     Edit Student Information
                                 </h3>
                             </div>
                             <button
                                 onClick={() => setEditingStudent(null)}
-                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700 transition-colors cursor-pointer"
+                                className="rounded-md p-1 text-slate-400 hover:bg-slate-200 dark:hover:bg-emerald-950 dark:hover:text-emerald-200 transition-colors cursor-pointer"
                             >
                                 <X className="size-5" />
                             </button>
