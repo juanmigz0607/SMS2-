@@ -65,7 +65,41 @@ import {
     type StudentRfidRecord,
 } from "./action";
 
-// Helper to generate a realistic MIFARE / NFC 8-byte Hex UID
+// Format hex string to standard uppercase colon-separated format (e.g. 4A:8C:31:0D)
+function formatHexUid(raw: string): string {
+    const clean = raw.replace(/[^0-9a-fA-F]/g, "").toUpperCase();
+    if (!clean) return "";
+    return clean.match(/.{1,2}/g)?.join(":") || clean;
+}
+
+// Convert Hex UID to Decimal string
+function hexToDecimal(hex: string): string {
+    const clean = hex.replace(/[^0-9a-fA-F]/g, "");
+    if (!clean) return "";
+    try {
+        const intVal = BigInt("0x" + clean);
+        return intVal.toString();
+    } catch {
+        return "";
+    }
+}
+
+// Convert Decimal string to formatted Hex UID
+function decimalToHex(decimal: string): string {
+    const clean = decimal.replace(/[^0-9]/g, "");
+    if (!clean) return "";
+    try {
+        const intVal = BigInt(clean);
+        let hex = intVal.toString(16).toUpperCase();
+        if (hex.length % 2 !== 0) hex = "0" + hex;
+        if (hex.length < 8) hex = hex.padStart(8, "0");
+        return formatHexUid(hex);
+    } catch {
+        return "";
+    }
+}
+
+// Helper to generate a realistic MIFARE / NFC 4-byte Hex UID for demo/testing
 function generateRandomRfidUid(): { hex: string; decimal: string } {
     const bytes = Array.from({ length: 4 }, () =>
         Math.floor(Math.random() * 256)
@@ -103,6 +137,16 @@ export default function RfidGeneratePage() {
     const [generatedCardNumber, setGeneratedCardNumber] = React.useState("");
     const [cardNotes, setCardNotes] = React.useState("");
     const [isIssuing, setIsIssuing] = React.useState(false);
+    const uidInputRef = React.useRef<HTMLInputElement>(null);
+
+    React.useEffect(() => {
+        if (issueDialogOpen) {
+            const timer = setTimeout(() => {
+                uidInputRef.current?.focus();
+            }, 120);
+            return () => clearTimeout(timer);
+        }
+    }, [issueDialogOpen]);
 
     // Card Preview Dialog
     const [previewDialogOpen, setPreviewDialogOpen] = React.useState(false);
@@ -174,12 +218,12 @@ export default function RfidGeneratePage() {
         });
     }, [records, searchQuery, statusFilter]);
 
-    // Open Issue Modal
+    // Open Issue Modal - Ready for physical reader
     const handleOpenIssueModal = (student: StudentRfidRecord) => {
         setSelectedStudent(student);
-        const { hex, decimal } = generateRandomRfidUid();
-        setGeneratedUid(student.rfid_uid || hex);
-        setGeneratedDecimal(student.rfid_decimal || decimal);
+        // Start empty if not previously assigned so physical RFID reader can scan into it
+        setGeneratedUid(student.rfid_uid || "");
+        setGeneratedDecimal(student.rfid_decimal || "");
         setGeneratedCardNumber(
             student.card_number || generateCardNumber(student.student_number)
         );
@@ -187,7 +231,7 @@ export default function RfidGeneratePage() {
         setIssueDialogOpen(true);
     };
 
-    // Regenerate chip UID inside modal
+    // Regenerate chip UID inside modal (test fallback if no physical reader)
     const handleRegenerateUid = () => {
         const { hex, decimal } = generateRandomRfidUid();
         setGeneratedUid(hex);
@@ -195,12 +239,69 @@ export default function RfidGeneratePage() {
         if (selectedStudent) {
             setGeneratedCardNumber(generateCardNumber(selectedStudent.student_number));
         }
+        toast.info("Generated sample test UID", { description: hex });
+    };
+
+    // Handle physical reader or keyboard input for UID
+    const handleUidInputChange = (rawVal: string) => {
+        const trimmed = rawVal.trim();
+        if (!trimmed) {
+            setGeneratedUid("");
+            setGeneratedDecimal("");
+            return;
+        }
+
+        // If physical scanner outputs decimal digits (e.g. 10-digit decimal reader: 0004928374)
+        if (/^\d{6,14}$/.test(trimmed)) {
+            setGeneratedDecimal(trimmed);
+            const computedHex = decimalToHex(trimmed);
+            setGeneratedUid(computedHex);
+            return;
+        }
+
+        // If scanner or user typed hex (e.g. 4A8C310D or 4A:8C:31:0D)
+        if (/^[0-9a-fA-F:\s-]+$/.test(trimmed)) {
+            const formatted = formatHexUid(trimmed);
+            setGeneratedUid(formatted);
+            const computedDecimal = hexToDecimal(formatted);
+            if (computedDecimal) {
+                setGeneratedDecimal(computedDecimal);
+            }
+            return;
+        }
+
+        setGeneratedUid(trimmed);
+    };
+
+    // Handle decimal tag input and auto-calculate hex
+    const handleDecimalInputChange = (rawVal: string) => {
+        const clean = rawVal.replace(/[^0-9]/g, "");
+        setGeneratedDecimal(clean);
+        if (clean.length >= 6) {
+            const computedHex = decimalToHex(clean);
+            if (computedHex) {
+                setGeneratedUid(computedHex);
+            }
+        }
+    };
+
+    // Physical USB readers send an Enter key when scan completes
+    const handleKeyDownUid = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (generatedUid) {
+                toast.success("RFID Card captured from physical reader!", {
+                    description: `Chip UID: ${generatedUid}`,
+                });
+            }
+        }
     };
 
     // Handle Issue Submit
     const handleConfirmIssue = async () => {
         if (!selectedStudent || !generatedUid.trim() || !generatedCardNumber.trim()) {
-            toast.error("Please fill in the required RFID credentials");
+            toast.error("Please tap your physical RFID card on the reader first");
+            uidInputRef.current?.focus();
             return;
         }
 
@@ -288,7 +389,7 @@ export default function RfidGeneratePage() {
         window.print();
     };
 
-    // Scan Simulator
+    // Scan Simulator (supports physical USB reader tap)
     const handleSimulateScan = (inputVal: string) => {
         setScannedInput(inputVal);
         const clean = inputVal.trim().toLowerCase();
@@ -296,12 +397,16 @@ export default function RfidGeneratePage() {
             setScannedStudent(null);
             return;
         }
-        const match = records.find(
-            (r) =>
+        const cleanHexNoColon = clean.replace(/[^0-9a-f]/g, "");
+        const match = records.find((r) => {
+            const studentHex = (r.rfid_uid || "").toLowerCase().replace(/[^0-9a-f]/g, "");
+            return (
                 (r.rfid_uid && r.rfid_uid.toLowerCase() === clean) ||
+                (studentHex && cleanHexNoColon && studentHex === cleanHexNoColon) ||
                 (r.rfid_decimal && r.rfid_decimal === clean) ||
                 r.student_number.toLowerCase() === clean
-        );
+            );
+        });
         setScannedStudent(match || null);
     };
 
@@ -480,11 +585,10 @@ export default function RfidGeneratePage() {
                             <button
                                 key={tab.key}
                                 onClick={() => setStatusFilter(tab.key)}
-                                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                                    statusFilter === tab.key
+                                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${statusFilter === tab.key
                                         ? "bg-white dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-200 shadow-xs font-semibold"
                                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                                }`}
+                                    }`}
                             >
                                 {tab.label}
                             </button>
@@ -797,33 +901,69 @@ export default function RfidGeneratePage() {
                                 </Badge>
                             </div>
 
-                            {/* RFID UID Input */}
+                            {/* RFID UID Input - Physical Reader Ready */}
                             <div className="space-y-1.5">
                                 <div className="flex items-center justify-between">
-                                    <label className="font-semibold text-slate-700 dark:text-slate-300">
-                                        Chip UID (Hexadecimal):
+                                    <label className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                        <span>Chip UID (Physical RFID Reader):</span>
+                                        {generatedUid ? (
+                                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                                                <CheckCircle2 className="size-3 text-emerald-600" />
+                                                Card Captured
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-300/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900 animate-pulse">
+                                                <Radio className="size-3" />
+                                                Ready for Card Tap
+                                            </span>
+                                        )}
                                     </label>
-                                    <button
-                                        type="button"
-                                        onClick={handleRegenerateUid}
-                                        className="text-emerald-600 dark:text-emerald-400 font-medium hover:underline flex items-center gap-1"
-                                    >
-                                        <Sparkles className="size-3" />
-                                        Randomize
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        {generatedUid && (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setGeneratedUid("");
+                                                    setGeneratedDecimal("");
+                                                    uidInputRef.current?.focus();
+                                                }}
+                                                className="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 text-[11px] underline"
+                                            >
+                                                Clear
+                                            </button>
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={handleRegenerateUid}
+                                            title="Generate mock UID if testing without physical reader"
+                                            className="text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium hover:underline flex items-center gap-1 text-[11px]"
+                                        >
+                                            <Sparkles className="size-3" />
+                                            Test Demo UID
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="relative">
-                                    <Radio className="absolute left-3 top-2.5 size-4 text-emerald-600" />
+                                    <Radio className={`absolute left-3 top-2.5 size-4 transition-colors ${generatedUid ? "text-emerald-600" : "text-amber-500 animate-pulse"}`} />
                                     <Input
+                                        ref={uidInputRef}
                                         id="input-rfid-uid"
                                         value={generatedUid}
-                                        onChange={(e) => setGeneratedUid(e.target.value)}
-                                        placeholder="e.g. 4A:8C:31:0D"
-                                        className="pl-9 font-mono text-xs uppercase"
+                                        onChange={(e) => handleUidInputChange(e.target.value)}
+                                        onKeyDown={handleKeyDownUid}
+                                        placeholder="Tap physical RFID card on reader now..."
+                                        className={cn(
+                                            "pl-9 font-mono text-xs uppercase transition-all",
+                                            !generatedUid
+                                                ? "border-amber-400/80 focus-visible:border-emerald-600 focus-visible:ring-emerald-500/20 bg-amber-50/20 dark:bg-amber-950/10 placeholder:text-slate-400"
+                                                : "border-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/10 font-bold text-emerald-950 dark:text-emerald-100"
+                                        )}
+                                        autoFocus
                                     />
                                 </div>
-                                <p className="text-[10px] text-slate-400">
-                                    Standard 4-byte or 7-byte contactless MIFARE / NFC tag UID. You can also tap a USB scanner.
+                                <p className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <ScanLine className="size-3 shrink-0 text-emerald-600" />
+                                    Tap your physical card on your USB scanner. Auto-converts Hex (MIFARE) and 10-digit Decimal tags.
                                 </p>
                             </div>
 
@@ -836,8 +976,8 @@ export default function RfidGeneratePage() {
                                     <Input
                                         id="input-rfid-decimal"
                                         value={generatedDecimal}
-                                        onChange={(e) => setGeneratedDecimal(e.target.value)}
-                                        placeholder="10-digit Tag"
+                                        onChange={(e) => handleDecimalInputChange(e.target.value)}
+                                        placeholder="Auto-calculated or tap reader"
                                         className="font-mono text-xs"
                                     />
                                 </div>
